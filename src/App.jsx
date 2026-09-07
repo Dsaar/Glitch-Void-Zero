@@ -1,18 +1,35 @@
-import { Canvas } from "@react-three/fiber";
+import {
+  Canvas,
+} from "@react-three/fiber";
+
+import FlightRig from "./components/game/FlightRig";
+
+import GameStateOverlay from "./components/game/GameStateOverlay";
 
 import PlayerShip from "./components/game/PlayerShip";
-import GameStateOverlay from "./components/game/GameStateOverlay";
+
+import {
+  useGameStore,
+} from "./components/game/gameStore";
+
 import {
   useKeyboard,
 } from "./components/game/useKeyboard";
 
 import GlitchTerrain from "./components/glitch/GlitchTerrain";
+
 import NeonStarfield from "./components/glitch/NeonStarfield";
-import TerrainPreviewRig from "./components/glitch/TerrainPreviewRig";
 
 
 function App() {
   useKeyboard();
+
+
+  const phase =
+    useGameStore(
+      (state) =>
+        state.phase
+    );
 
 
   return (
@@ -65,9 +82,11 @@ function App() {
           ]}
         />
 
+
         <ambientLight
           intensity={1.4}
         />
+
 
         <directionalLight
           position={[
@@ -77,6 +96,7 @@ function App() {
           ]}
           intensity={3}
         />
+
 
         <directionalLight
           position={[
@@ -90,11 +110,17 @@ function App() {
 
         <NeonStarfield />
 
+
         <GlitchTerrain />
 
-        <TerrainPreviewRig />
 
-        <PlayerShip />
+        <FlightRig />
+
+
+        {phase ===
+          "playing" && (
+            <PlayerShip />
+          )}
       </Canvas>
     </>
   );
