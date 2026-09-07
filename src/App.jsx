@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 
-import ControlPreview from "./components/game/ControlPreview";
+import PlayerShip from "./components/game/PlayerShip";
 import GameStateOverlay from "./components/game/GameStateOverlay";
 import {
   useKeyboard,
@@ -65,6 +65,28 @@ function App() {
           ]}
         />
 
+        <ambientLight
+          intensity={1.4}
+        />
+
+        <directionalLight
+          position={[
+            5,
+            10,
+            8,
+          ]}
+          intensity={3}
+        />
+
+        <directionalLight
+          position={[
+            -6,
+            4,
+            -5,
+          ]}
+          intensity={1.5}
+        />
+
 
         <NeonStarfield />
 
@@ -72,7 +94,7 @@ function App() {
 
         <TerrainPreviewRig />
 
-        <ControlPreview />
+        <PlayerShip />
       </Canvas>
     </>
   );

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 import {
 	keys,
@@ -9,6 +10,8 @@ import {
 	playerState,
 	useGameStore,
 } from "./gameStore";
+
+import ShipModel from "./ShipModel";
 
 
 const MOVE_SPEED = 10;
@@ -20,8 +23,24 @@ const MIN_Y = 1.5;
 const MAX_Y = 12;
 
 
-export default function ControlPreview() {
-	const meshRef = useRef();
+// How strongly the ship banks left/right.
+const MAX_BANK =
+	THREE.MathUtils.degToRad(
+		24
+	);
+
+
+// How strongly the nose pitches
+// during vertical movement.
+const MAX_PITCH =
+	THREE.MathUtils.degToRad(
+		10
+	);
+
+
+export default function PlayerShip() {
+	const shipRef =
+		useRef();
 
 
 	useFrame((_, delta) => {
@@ -44,12 +63,14 @@ export default function ControlPreview() {
 
 		let horizontal = 0;
 
+
 		if (
 			keys.KeyA ||
 			keys.ArrowLeft
 		) {
 			horizontal -= 1;
 		}
+
 
 		if (
 			keys.KeyD ||
@@ -65,12 +86,14 @@ export default function ControlPreview() {
 
 		let vertical = 0;
 
+
 		if (
 			keys.KeyW ||
 			keys.ArrowUp
 		) {
 			vertical += 1;
 		}
+
 
 		if (
 			keys.KeyS ||
@@ -100,13 +123,14 @@ export default function ControlPreview() {
 
 
 		// --------------------------------------------------
-		// Update player position
+		// Update position
 		// --------------------------------------------------
 
 		playerState.x +=
 			horizontal *
 			MOVE_SPEED *
 			delta;
+
 
 		playerState.y +=
 			vertical *
@@ -115,70 +139,86 @@ export default function ControlPreview() {
 
 
 		// --------------------------------------------------
-		// Keep player inside the playable area
+		// Clamp to playable area
 		// --------------------------------------------------
 
 		playerState.x =
-			Math.max(
+			THREE.MathUtils.clamp(
+				playerState.x,
 				MIN_X,
-				Math.min(
-					MAX_X,
-					playerState.x
-				)
+				MAX_X
 			);
+
 
 		playerState.y =
-			Math.max(
+			THREE.MathUtils.clamp(
+				playerState.y,
 				MIN_Y,
-				Math.min(
-					MAX_Y,
-					playerState.y
-				)
+				MAX_Y
 			);
 
 
 		// --------------------------------------------------
-		// Move temporary object
+		// Apply position and flight animation
 		// --------------------------------------------------
 
-		if (meshRef.current) {
-			meshRef.current.position.x =
+		if (shipRef.current) {
+			shipRef.current.position.x =
 				playerState.x;
 
-			meshRef.current.position.y =
+			shipRef.current.position.y =
 				playerState.y;
 
 
-			// Small visual tilt while moving.
-			meshRef.current.rotation.z =
-				-horizontal * 0.35;
+			// ----------------------------------------------
+			// Smooth banking
+			// ----------------------------------------------
 
-			meshRef.current.rotation.x =
-				vertical * 0.15;
+			const targetBank =
+				-horizontal *
+				MAX_BANK;
+
+
+			shipRef.current.rotation.z =
+				THREE.MathUtils.damp(
+					shipRef.current.rotation.z,
+					targetBank,
+					6,
+					delta
+				);
+
+
+			// ----------------------------------------------
+			// Smooth pitch
+			// ----------------------------------------------
+
+			const targetPitch =
+				-vertical *
+				MAX_PITCH;
+
+
+			shipRef.current.rotation.x =
+				THREE.MathUtils.damp(
+					shipRef.current.rotation.x,
+					targetPitch,
+					6,
+					delta
+				);
 		}
 	});
 
 
 	return (
-		<mesh
-			ref={meshRef}
+		<group
+			ref={shipRef}
+
 			position={[
 				playerState.x,
 				playerState.y,
 				0,
 			]}
 		>
-			<octahedronGeometry
-				args={[
-					0.65,
-					0,
-				]}
-			/>
-
-			<meshBasicMaterial
-				color="#00e5ff"
-				wireframe
-			/>
-		</mesh>
+			<ShipModel />
+		</group>
 	);
 }
