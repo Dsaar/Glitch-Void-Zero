@@ -4712,4 +4712,130 @@ void main() {
       );
   }
 }
-`,Uv={distance:0,smooth:0,velocity:0,intensity:.12};function Wv(e){return new yl({vertexShader:Vv,fragmentShader:Hv,uniforms:{uTime:{value:0},uOffset:{value:0},uGlitchIntensity:{value:.12},uWire:{value:+!!e}},wireframe:e,transparent:e,depthWrite:!e})}function Gv(){let e=(0,v.useRef)(),t=(0,v.useRef)(0),n=(0,v.useMemo)(()=>new Qc(240,320,256,340),[]),r=(0,v.useMemo)(()=>Wv(!1),[]),i=(0,v.useMemo)(()=>Wv(!0),[]);return(0,v.useEffect)(()=>()=>{n.dispose(),r.dispose(),i.dispose()},[n,r,i]),b_(({camera:n},a)=>{t.current+=a,e.current&&(e.current.position.z=n.position.z-60),[r,i].forEach(e=>{e.uniforms.uTime.value=t.current,e.uniforms.uOffset.value=Uv.smooth,e.uniforms.uGlitchIntensity.value=Uv.intensity})}),(0,Tg.jsxs)(`group`,{ref:e,rotation:[-Math.PI/2,0,0],position:[0,0,-60],children:[(0,Tg.jsx)(`mesh`,{geometry:n,material:r}),(0,Tg.jsx)(`mesh`,{geometry:n,material:i,position:[0,0,.15]})]})}function Kv(){return b_((e,t)=>{Uv.smooth+=12*t,Uv.distance=Uv.smooth,Uv.intensity=.12}),null}function qv(){return(0,Tg.jsxs)(Bv,{camera:{position:[0,8.5,16],fov:62,near:.1,far:500},dpr:[1,1.5],gl:{antialias:!1,powerPreference:`high-performance`},children:[(0,Tg.jsx)(`color`,{attach:`background`,args:[`#030304`]}),(0,Tg.jsx)(`fog`,{attach:`fog`,args:[`#030304`,60,220]}),(0,Tg.jsx)(Gv,{}),(0,Tg.jsx)(Kv,{})]})}(0,y.createRoot)(document.getElementById(`root`)).render((0,Tg.jsx)(v.StrictMode,{children:(0,Tg.jsx)(qv,{})}));
+`,Uv={distance:0,smooth:0,velocity:0,intensity:.12};function Wv(e){return new yl({vertexShader:Vv,fragmentShader:Hv,uniforms:{uTime:{value:0},uOffset:{value:0},uGlitchIntensity:{value:.12},uWire:{value:+!!e}},wireframe:e,transparent:e,depthWrite:!e})}function Gv(){let e=(0,v.useRef)(),t=(0,v.useRef)(0),n=(0,v.useMemo)(()=>new Qc(240,320,256,340),[]),r=(0,v.useMemo)(()=>Wv(!1),[]),i=(0,v.useMemo)(()=>Wv(!0),[]);return(0,v.useEffect)(()=>()=>{n.dispose(),r.dispose(),i.dispose()},[n,r,i]),b_(({camera:n},a)=>{t.current+=a,e.current&&(e.current.position.z=n.position.z-60),[r,i].forEach(e=>{e.uniforms.uTime.value=t.current,e.uniforms.uOffset.value=Uv.smooth,e.uniforms.uGlitchIntensity.value=Uv.intensity})}),(0,Tg.jsxs)(`group`,{ref:e,rotation:[-Math.PI/2,0,0],position:[0,0,-60],children:[(0,Tg.jsx)(`mesh`,{geometry:n,material:r}),(0,Tg.jsx)(`mesh`,{geometry:n,material:i,position:[0,0,.15]})]})}function Kv(){return b_((e,t)=>{Uv.smooth+=12*t,Uv.distance=Uv.smooth,Uv.intensity=.12}),null}var qv=900,Jv=[new G(`#00e5ff`),new G(`#ff2d8a`),new G(`#9be9ff`),new G(`#ffffff`)];function Yv(e){let t=Math.sin(e*12.9898)*43758.5453;return t-Math.floor(t)}var Xv=`
+uniform float uTime;
+
+attribute float aSeed;
+attribute vec3 aColor;
+
+varying vec3 vColor;
+varying float vAlpha;
+
+
+float hash(float n) {
+  return fract(
+    sin(n) *
+    43758.5453123
+  );
+}
+
+
+void main() {
+  vColor = aColor;
+
+
+  // ----------------------------------------------------
+  // Gentle twinkle
+  // ----------------------------------------------------
+
+  float twinkle =
+    0.55 +
+    0.45 *
+    sin(
+      uTime *
+      (
+        1.2 +
+        aSeed * 2.0
+      ) +
+      aSeed * 40.0
+    );
+
+
+  // ----------------------------------------------------
+  // Digital glitch flicker
+  // ----------------------------------------------------
+
+  float slot =
+    floor(
+      uTime * 3.0 +
+      aSeed * 90.0
+    );
+
+  float randomValue =
+    hash(
+      slot +
+      aSeed * 17.0
+    );
+
+  float flicker = 1.0;
+
+  if (randomValue > 0.96) {
+    flicker = 2.2;
+  }
+
+  if (randomValue < 0.03) {
+    flicker = 0.0;
+  }
+
+
+  vAlpha =
+    twinkle *
+    flicker;
+
+
+  // ----------------------------------------------------
+  // Position and apparent star size
+  // ----------------------------------------------------
+
+  vec4 modelViewPosition =
+    modelViewMatrix *
+    vec4(
+      position,
+      1.0
+    );
+
+  gl_PointSize =
+    (
+      1.4 +
+      aSeed * 2.4
+    ) *
+    (
+      280.0 /
+      -modelViewPosition.z
+    );
+
+
+  gl_Position =
+    projectionMatrix *
+    modelViewPosition;
+}
+`,Zv=`
+varying vec3 vColor;
+varying float vAlpha;
+
+
+void main() {
+  vec2 center =
+    gl_PointCoord -
+    0.5;
+
+  float distanceFromCenter =
+    length(center);
+
+
+  // Turn the square point into a soft circular star.
+  float mask =
+    smoothstep(
+      0.5,
+      0.15,
+      distanceFromCenter
+    );
+
+
+  gl_FragColor =
+    vec4(
+      vColor,
+      vAlpha * mask
+    );
+}
+`;function Qv(){let e=(0,v.useRef)(),t=(0,v.useRef)(),n=(0,v.useMemo)(()=>{let e=new Float32Array(qv*3),t=new Float32Array(qv),n=new Float32Array(qv*3);for(let r=0;r<qv;r++){let i=Yv(r*4+1),a=Yv(r*4+2),o=Yv(r*4+3),s=Yv(r*4+4);e[r*3]=(i-.5)*480,e[r*3+1]=12+a*150,e[r*3+2]=-80-o*260,t[r]=s;let c=Jv[Math.floor(Yv(r*7+10)*Jv.length)];n[r*3]=c.r,n[r*3+1]=c.g,n[r*3+2]=c.b}let r=new Ji;return r.setAttribute(`position`,new Oi(e,3)),r.setAttribute(`aSeed`,new Oi(t,1)),r.setAttribute(`aColor`,new Oi(n,3)),r},[]),r=(0,v.useMemo)(()=>({uTime:{value:0}}),[]);return(0,v.useEffect)(()=>()=>{n.dispose()},[n]),b_(({camera:n,clock:r})=>{t.current&&(t.current.uniforms.uTime.value=r.elapsedTime),e.current&&(e.current.position.z=n.position.z)}),(0,Tg.jsx)(`group`,{ref:e,children:(0,Tg.jsx)(`points`,{geometry:n,children:(0,Tg.jsx)(`shaderMaterial`,{ref:t,vertexShader:Xv,fragmentShader:Zv,uniforms:r,transparent:!0,depthWrite:!1,blending:2})})})}function $v(){return(0,Tg.jsxs)(Bv,{camera:{position:[0,8.5,16],fov:62,near:.1,far:500},dpr:[1,1.5],gl:{antialias:!1,powerPreference:`high-performance`},children:[(0,Tg.jsx)(`color`,{attach:`background`,args:[`#030304`]}),(0,Tg.jsx)(`fog`,{attach:`fog`,args:[`#030304`,60,220]}),(0,Tg.jsx)(Qv,{}),(0,Tg.jsx)(Gv,{}),(0,Tg.jsx)(Kv,{})]})}(0,y.createRoot)(document.getElementById(`root`)).render((0,Tg.jsx)(v.StrictMode,{children:(0,Tg.jsx)($v,{})}));

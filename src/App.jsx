@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 
 import GlitchTerrain from "./components/glitch/GlitchTerrain";
 import TerrainPreviewRig from "./components/glitch/TerrainPreviewRig";
+import NeonStarfield from "./components/glitch/NeonStarfield";
 
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
           220,
         ]}
       />
+
+      <NeonStarfield/>
 
       <GlitchTerrain />
 
