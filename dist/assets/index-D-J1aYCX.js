@@ -4124,4 +4124,592 @@ Error generating stack: `+e.message+`
   `+(i.join(` > `)+`
 
 No matching component was found for:
-  `)+e.join(` > `)}return null},Ca.getPublicRootInstance=function(e){if(e=e.current,!e.child)return null;switch(e.child.tag){case 27:case 5:return Ja(e.child.stateNode);default:return e.child.stateNode}},Ca.injectIntoDevTools=function(){var e={bundleType:0,version:Ga,rendererPackageName:Ka,currentDispatcherRef:J,reconcilerVersion:`19.2.0`};if(qa!==null&&(e.rendererConfig=qa),typeof __REACT_DEVTOOLS_GLOBAL_HOOK__>`u`)e=!1;else{var t=__REACT_DEVTOOLS_GLOBAL_HOOK__;if(t.isDisabled||!t.supportsFiber)e=!0;else{try{kc=t.inject(e),Ac=t}catch{}e=!!t.checkDCE}}return e},Ca.isAlreadyRendering=function(){return!!(Q&6)},Ca.observeVisibleRects=function(e,t,n,i){if(!jo)throw Error(r(363));e=Ci(e,t);var a=Ro(e,n,i).disconnect;return{disconnect:function(){a()}}},Ca.shouldError=function(){return null},Ca.shouldSuspend=function(){return!1},Ca.startHostTransition=function(e,t,i,a){if(e.tag!==5)throw Error(r(476));var o=Cn(e).queue;Sn(e,o,t,Eo,i===null?n:function(){var t=Cn(e);return t.next===null&&(t=e.alternate.memoizedState),An(e,t.next.queue,{},wi()),i(a)})},Ca.updateContainer=function(e,t,n,r){var i=t.current,a=wi();return ba(i,a,e,t,n,r),a},Ca.updateContainerSync=function(e,t,n,r){return ba(t.current,2,e,t,n,r),2},Ca},e.exports.default=e.exports,Object.defineProperty(e.exports,"__esModule",{value:!0})}(k_)),k_.exports}({exports:{}}).exports;var M_;function N_(){return M_||(M_=1,O_.exports=j_()),O_.exports}var P_=D_(N_());function F_(e){let t=P_(e);return t.injectIntoDevTools(),t}var I_=0,L_={},R_=/^three(?=[A-Z])/,z_=e=>`${e[0].toUpperCase()}${e.slice(1)}`,B_=0,V_=e=>typeof e==`function`;function H_(e){if(V_(e)){let t=`${B_++}`;return L_[t]=e,t}Object.assign(L_,e)}function U_(e,t){let n=z_(e),r=L_[n];if(e!==`primitive`&&!r)throw Error(`R3F: ${n} is not part of the THREE namespace! Did you forget to extend? See: https://docs.pmnd.rs/react-three-fiber/api/objects#using-3rd-party-objects-declaratively`);if(e===`primitive`&&!t.object)throw Error(`R3F: Primitives without 'object' are invalid!`);if(t.args!==void 0&&!Array.isArray(t.args))throw Error(`R3F: The args prop must be an array!`)}function W_(e,t,n){var r;return e=z_(e)in L_?e:e.replace(R_,``),U_(e,t),e===`primitive`&&(r=t.object)!=null&&r.__r3f&&delete t.object.__r3f,Xg(t.object,n,e,t)}function G_(e){if(!e.isHidden){var t;e.props.attach&&(t=e.parent)!=null&&t.object?e_(e.parent,e):u_(e.object)&&(e.object.visible=!1),e.isHidden=!0,c_(e)}}function K_(e){if(e.isHidden){var t;e.props.attach&&(t=e.parent)!=null&&t.object?$g(e.parent,e):u_(e.object)&&e.props.visible!==!1&&(e.object.visible=!0),e.isHidden=!1,c_(e)}}function q_(e,t,n){let r=t.root.getState();if(e.parent||e.object===r.scene){if(!t.object){let e=L_[z_(t.type)];t.object=t.props.object??new e(...t.props.args??[]),t.object.__r3f=t}if(s_(t.object,t.props),t.props.attach)$g(e,t);else if(u_(t.object)&&u_(e.object)){let r=e.object.children.indexOf(n?.object);if(n&&r!==-1){let n=e.object.children.indexOf(t.object);if(n!==-1){e.object.children.splice(n,1);let i=n<r?r-1:r;e.object.children.splice(i,0,t.object)}else t.object.parent=e.object,e.object.children.splice(r,0,t.object),t.object.dispatchEvent({type:`added`}),e.object.dispatchEvent({type:`childadded`,child:t.object})}else e.object.add(t.object)}for(let e of t.children)q_(t,e);c_(t)}}function J_(e,t){if(t){if(t.parent===e){let n=e.children.indexOf(t);n!==-1&&e.children.splice(n,1)}t.parent=e,e.children.push(t),q_(e,t)}}function Y_(e,t,n){if(!t||!n)return;if(t.parent===e){let n=e.children.indexOf(t);n!==-1&&e.children.splice(n,1)}t.parent=e;let r=e.children.indexOf(n);r===-1?e.children.push(t):e.children.splice(r,0,t),q_(e,t,n)}function X_(e){if(typeof e.dispose==`function`){let t=()=>{try{e.dispose()}catch{}};typeof IS_REACT_ACT_ENVIRONMENT<`u`?t():(0,wg.unstable_scheduleCallback)(wg.unstable_IdlePriority,t)}}function Z_(e,t,n){if(!t)return;t.parent=null;let r=e.children.indexOf(t);r!==-1&&e.children.splice(r,1),t.props.attach?e_(e,t):u_(t.object)&&u_(e.object)&&(e.object.remove(t.object),m_(Fg(t),t.object));let i=t.props.dispose!==null&&n!==!1;for(let e=t.children.length-1;e>=0;e--){let n=t.children[e];Z_(t,n,i)}t.children.length=0,delete t.object.__r3f,i&&t.type!==`primitive`&&t.object.type!==`Scene`&&X_(t.object),n===void 0&&c_(t)}function Q_(e,t){for(let n of[e,e.alternate])if(n!==null){if(typeof n.ref==`function`){n.refCleanup==null||n.refCleanup();let e=n.ref(t);typeof e==`function`&&(n.refCleanup=e)}else n.ref&&(n.ref.current=t)}}var $_=[];function ev(){if($_.length!==0)try{tv()}finally{$_.length=0}}function tv(){for(let[e]of $_){let t=e.parent;if(t){e.props.attach?e_(t,e):u_(e.object)&&u_(t.object)&&t.object.remove(e.object);for(let t of e.children)t.props.attach?e_(e,t):u_(t.object)&&u_(e.object)&&e.object.remove(t.object)}e.isHidden&&K_(e),e.object.__r3f&&delete e.object.__r3f,e.type!==`primitive`&&X_(e.object)}for(let[e,t,n]of $_){e.props=t;let r=e.parent;if(r){let t=L_[z_(e.type)],i=e.object;e.object=e.props.object??new t(...e.props.args??[]),e.object.__r3f=e,Q_(n,e.object),p_(Fg(e),i,e.object),s_(e.object,e.props),e.props.attach?$g(r,e):u_(e.object)&&u_(r.object)&&r.object.add(e.object);for(let t of e.children)t.props.attach?$g(e,t):u_(t.object)&&u_(e.object)&&e.object.add(t.object);c_(e)}}}var nv=()=>{},rv={},iv=I_;function av(e){switch(e){case`beforetoggle`:case`cancel`:case`click`:case`close`:case`contextmenu`:case`copy`:case`cut`:case`auxclick`:case`dblclick`:case`dragend`:case`dragstart`:case`drop`:case`focusin`:case`focusout`:case`input`:case`invalid`:case`keydown`:case`keypress`:case`keyup`:case`mousedown`:case`mouseup`:case`paste`:case`pause`:case`play`:case`pointercancel`:case`pointerdown`:case`pointerup`:case`ratechange`:case`reset`:case`resize`:case`seeked`:case`submit`:case`touchcancel`:case`touchend`:case`touchstart`:case`volumechange`:case`change`:case`selectionchange`:case`compositionstart`:case`compositionend`:case`compositionupdate`:case`beforeinput`:case`blur`:case`fullscreenchange`:case`focus`:case`hashchange`:case`popstate`:case`select`:case`selectstart`:return w_;case`drag`:case`dragenter`:case`dragexit`:case`dragleave`:case`dragover`:case`mousemove`:case`mouseout`:case`mouseover`:case`pointermove`:case`pointerout`:case`pointerover`:case`scroll`:case`touchmove`:case`wheel`:case`mouseenter`:case`mouseleave`:case`pointerenter`:case`pointerleave`:return S_;case`message`:switch((0,wg.unstable_getCurrentPriorityLevel)()){case wg.unstable_ImmediatePriority:return w_;case wg.unstable_UserBlockingPriority:return S_;case wg.unstable_NormalPriority:case wg.unstable_LowPriority:return C_;case wg.unstable_IdlePriority:return T_;default:return C_}default:return C_}}function ov(e){typeof queueMicrotask==`function`?queueMicrotask(e):typeof Promise<`u`?Promise.resolve().then(e).catch(e=>{setTimeout(()=>{throw e})}):setTimeout(e)}var sv=F_({isPrimaryRenderer:!1,warnsIfNotActing:!1,supportsMutation:!0,supportsPersistence:!1,supportsHydration:!1,createInstance:W_,removeChild:Z_,appendChild:J_,appendInitialChild:J_,insertBefore:Y_,appendChildToContainer(e,t){let n=e.getState().scene.__r3f;t&&n&&J_(n,t)},removeChildFromContainer(e,t){let n=e.getState().scene.__r3f;t&&n&&Z_(n,t)},insertInContainerBefore(e,t,n){let r=e.getState().scene.__r3f;t&&n&&r&&Y_(r,t,n)},getRootHostContext:()=>rv,getChildHostContext:()=>rv,commitUpdate(e,t,n,r,i){var a;U_(t,r);let o=!1;if(e.type===`primitive`&&n.object!==r.object?o=!0:r.args?.length===n.args?.length?(a=r.args)!=null&&a.some((e,t)=>e!==n.args?.[t])&&(o=!0):o=!0,o)$_.push([e,Yg(r),i]);else{let t=i_(e,r),n=e.props.attach;e.props=Yg(r),n===void 0?delete e.props.attach:e.props.attach=n,Object.keys(t).length&&s_(e.object,t)}},finalizeInitialChildren:()=>!1,commitMount(){},getPublicInstance:e=>e?.object,prepareForCommit:()=>null,preparePortalMount:e=>Xg(e.getState().scene,e,``,{}),resetAfterCommit:ev,shouldSetTextContent:()=>!1,clearContainer:()=>!1,hideInstance:G_,unhideInstance:K_,createTextInstance:nv,hideTextInstance:nv,unhideTextInstance:nv,supportsMicrotasks:!0,scheduleMicrotask:ov,scheduleTimeout:typeof setTimeout==`function`?setTimeout:void 0,cancelTimeout:typeof clearTimeout==`function`?clearTimeout:void 0,noTimeout:-1,getInstanceFromNode:()=>null,beforeActiveInstanceBlur(){},afterActiveInstanceBlur(){},detachDeletedInstance(){},prepareScopeUpdate(){},getInstanceFromScope:()=>null,shouldAttemptEagerTransition:()=>!1,trackSchedulerEvent:()=>{},resolveEventType:()=>null,resolveEventTimeStamp:()=>-1.1,requestPostPaintCallback(){},maySuspendCommit:()=>!1,preloadInstance:()=>!0,suspendInstance(){},waitForCommitToBeReady:()=>null,NotPendingTransition:null,HostTransitionContext:v.createContext(null),setCurrentUpdatePriority(e){iv=e},getCurrentUpdatePriority(){return iv},resolveUpdatePriority(){if(iv!==I_)return iv;let e=typeof window<`u`?window.event?.type:void 0;return e===void 0?C_:av(e)},resetFormInstance(){},rendererPackageName:`@react-three/fiber`,rendererVersion:E_.version,applyViewTransitionName(e,t,n){},restoreViewTransitionName(e,t){},cancelViewTransitionName(e,t,n){},cancelRootViewTransitionName(e){},restoreRootViewTransitionName(e){},InstanceMeasurement:null,measureInstance:e=>null,wasInstanceInViewport:e=>!0,hasInstanceChanged:(e,t)=>!1,hasInstanceAffectedParent:(e,t)=>!1,suspendOnActiveViewTransition(e,t){},startGestureTransition:()=>null,startViewTransition:()=>null,stopViewTransition(e){},createViewTransitionInstance:e=>null,getCurrentGestureOffset(e){throw Error(`startGestureTransition is not yet supported in react-three-fiber.`)},cloneMutableInstance(e,t){return e},cloneMutableTextInstance(e){return e},cloneRootViewTransitionContainer(e){throw Error(`Not implemented.`)},removeRootViewTransitionClone(e,t){throw Error(`Not implemented.`)},createFragmentInstance:e=>null,updateFragmentInstanceFiber(e,t){},commitNewChildToFragmentInstance(e,t){},deleteChildFromFragmentInstance(e,t){},measureClonedInstance:e=>null,maySuspendCommitOnUpdate:(e,t,n)=>!1,maySuspendCommitInSyncRender:(e,t)=>!1,startSuspendingCommit:()=>null,getSuspendedCommitReason:(e,t)=>null}),cv=new Map,lv={objects:`shallow`,strict:!1};function uv(e,t){if(!t&&typeof HTMLCanvasElement<`u`&&e instanceof HTMLCanvasElement&&e.parentElement){let{width:t,height:n,top:r,left:i}=e.parentElement.getBoundingClientRect();return{width:t,height:n,top:r,left:i}}return!t&&typeof OffscreenCanvas<`u`&&e instanceof OffscreenCanvas?{width:e.width,height:e.height,top:0,left:0}:{width:0,height:0,top:0,left:0,...t}}function dv(e){let t=cv.get(e),n=t?.fiber,r=t?.store;t&&console.warn(`R3F.createRoot should only be called once!`);let i=typeof reportError==`function`?reportError:console.error,a=r||v_(Ov,kv),o=n||sv.createContainer(a,x_,null,!1,null,``,i,i,i,null);t||cv.set(e,{fiber:o,store:a});let s,c,l=!1,u=null;return{async configure(t={}){let n;u=new Promise(e=>n=e);let{gl:r,size:i,scene:o,events:d,onCreated:f,shadows:p=!1,linear:m=!1,flat:h=!1,legacy:g=!1,orthographic:_=!1,frameloop:v=`always`,dpr:y=[1,2],performance:b,raycaster:x,camera:S,onPointerMissed:C}=t,w=a.getState(),T=w.gl;if(!w.gl){let t={canvas:e,powerPreference:`high-performance`,antialias:!0,alpha:!0},n=typeof r==`function`?await r(t):r;T=g_(n)?n:new ug({...t,...r}),w.set({gl:T})}let E=w.raycaster;E||w.set({raycaster:E=new Wd});let{params:D,...O}=x||{};if(Kg.equ(O,E,lv)||s_(E,{...O}),Kg.equ(D,E.params,lv)||s_(E,{params:{...E.params,...D}}),!w.camera||w.camera===c&&!Kg.equ(c,S,lv)){c=S;let e=S?.isCamera,t=e?S:_?new ku(0,0,0,0,.1,1e3):new wu(75,0,.1,1e3);e||(t.position.z=5,S&&(s_(t,S),t.manual||(`aspect`in S||`left`in S||`right`in S||`bottom`in S||`top`in S)&&(t.manual=!0,t.updateProjectionMatrix())),!w.camera&&!(S!=null&&S.rotation)&&t.lookAt(0,0,0)),w.set({camera:t}),E.camera=t}if(!w.scene){let e;o!=null&&o.isScene?(e=o,Xg(e,a,``,{})):(e=new Gr,Xg(e,a,``,{}),o&&s_(e,o)),w.set({scene:e})}d&&!w.events.handlers&&w.set({events:d(a)});let k=uv(e,i);if(Kg.equ(k,w.size,lv)||w.setSize(k.width,k.height,k.top,k.left),y&&w.viewport.dpr!==Wg(y)&&w.setDpr(y),w.frameloop!==v&&w.setFrameloop(v),w.onPointerMissed||w.set({onPointerMissed:C}),b&&!Kg.equ(b,w.performance,lv)&&w.set(e=>({performance:{...e.performance,...b}})),!w.xr){let e=(e,t)=>{let n=a.getState();n.frameloop!==`never`&&kv(e,!0,n,t)},t=()=>{let t=a.getState();t.gl.xr.enabled=t.gl.xr.isPresenting,t.gl.xr.setAnimationLoop(t.gl.xr.isPresenting?e:null),t.gl.xr.isPresenting||Ov(t)},n={connect(){let e=a.getState().gl;e.xr.addEventListener(`sessionstart`,t),e.xr.addEventListener(`sessionend`,t)},disconnect(){let e=a.getState().gl;e.xr.removeEventListener(`sessionstart`,t),e.xr.removeEventListener(`sessionend`,t)}};typeof T.xr?.addEventListener==`function`&&n.connect(),w.set({xr:n})}if(T.shadowMap){let e=T.shadowMap.enabled,t=T.shadowMap.type;if(T.shadowMap.enabled=!!p,Kg.boo(p))T.shadowMap.type=2;else if(Kg.str(p)){let e={basic:0,percentage:1,soft:2,variance:3};T.shadowMap.type=e[p]??2}else Kg.obj(p)&&Object.assign(T.shadowMap,p);(e!==T.shadowMap.enabled||t!==T.shadowMap.type)&&(T.shadowMap.needsUpdate=!0)}return Wn.enabled=!g,l||(T.outputColorSpace=m?xt:bt,T.toneMapping=h?0:4),w.legacy!==g&&w.set(()=>({legacy:g})),w.linear!==m&&w.set(()=>({linear:m})),w.flat!==h&&w.set(()=>({flat:h})),r&&!Kg.fun(r)&&!g_(r)&&!Kg.equ(r,T,lv)&&s_(T,r),s=f,l=!0,n(),this},render(t){return!l&&!u&&this.configure(),u.then(()=>{sv.updateContainer((0,Tg.jsx)(fv,{store:a,children:t,onCreated:s,rootElement:e}),o,null,()=>void 0)}),a},unmount(){pv(e)}}}function fv({store:e,children:t,onCreated:n,rootElement:r}){return zg(()=>{let t=e.getState();t.set(e=>({internal:{...e.internal,active:!0}})),n&&n(t),e.getState().events.connected||t.events.connect==null||t.events.connect(r)},[]),(0,Tg.jsx)(__.Provider,{value:e,children:t})}function pv(e,t){let n=cv.get(e),r=n?.fiber;if(r){let i=n?.store.getState();i&&(i.internal.active=!1),sv.updateContainer(null,r,null,()=>{i&&setTimeout(()=>{try{var n,r,a,o;i.events.disconnect==null||i.events.disconnect(),(n=i.gl)==null||(r=n.renderLists)==null||r.dispose==null||r.dispose(),(a=i.gl)==null||a.forceContextLoss==null||a.forceContextLoss(),(o=i.gl)!=null&&o.xr&&i.xr.disconnect(),qg(i.scene),cv.delete(e),t&&t(e)}catch{}},500)})}}var mv=new Set,hv=new Set,gv=new Set;function _v(e,t){if(e.size)for(let{callback:n}of e.values())n(t)}function vv(e,t){switch(e){case`before`:return _v(mv,t);case`after`:return _v(hv,t);case`tail`:return _v(gv,t)}}var yv,bv;function xv(e,t,n){let r=t.clock.getDelta();t.frameloop===`never`&&typeof e==`number`&&(r=e-t.clock.elapsedTime,t.clock.oldTime=t.clock.elapsedTime,t.clock.elapsedTime=e),yv=t.internal.subscribers;for(let e=0;e<yv.length;e++)bv=yv[e],bv.ref.current(bv.store.getState(),r,n);return!t.internal.priority&&t.gl.render&&t.gl.render(t.scene,t.camera),t.internal.frames=Math.max(0,t.internal.frames-1),t.frameloop===`always`?1:t.internal.frames}var Sv=!1,Cv=!1,wv,Tv,Ev;function Dv(e){Tv=requestAnimationFrame(Dv),Sv=!0,wv=0,vv(`before`,e),Cv=!0;for(let n of cv.values()){var t;Ev=n.store.getState(),Ev.internal.active&&(Ev.frameloop===`always`||Ev.internal.frames>0)&&!((t=Ev.gl.xr)!=null&&t.isPresenting)&&(wv+=xv(e,Ev))}if(Cv=!1,vv(`after`,e),wv===0)return vv(`tail`,e),Sv=!1,cancelAnimationFrame(Tv)}function Ov(e,t=1){var n;if(!e)return cv.forEach(e=>Ov(e.store.getState(),t));(n=e.gl.xr)!=null&&n.isPresenting||!e.internal.active||e.frameloop===`never`||(t>1?e.internal.frames=Math.min(60,e.internal.frames+t):Cv?e.internal.frames=2:e.internal.frames=1,Sv||(Sv=!0,requestAnimationFrame(Dv)))}function kv(e,t=!0,n,r){if(t&&vv(`before`,e),n)xv(e,n,r);else for(let t of cv.values())xv(e,t.store.getState());t&&vv(`after`,e)}var Av={onClick:[`click`,!1],onContextMenu:[`contextmenu`,!1],onDoubleClick:[`dblclick`,!1],onWheel:[`wheel`,!0],onPointerDown:[`pointerdown`,!0],onPointerUp:[`pointerup`,!0],onPointerLeave:[`pointerleave`,!0],onPointerMove:[`pointermove`,!0],onPointerCancel:[`pointercancel`,!0],onLostPointerCapture:[`lostpointercapture`,!0]};function jv(e){let{handlePointer:t}=h_(e);return{priority:1,enabled:!0,compute(e,t,n){t.pointer.set(e.offsetX/t.size.width*2-1,-(e.offsetY/t.size.height)*2+1),t.raycaster.setFromCamera(t.pointer,t.camera)},connected:void 0,handlers:Object.keys(Av).reduce((e,n)=>({...e,[n]:t(n)}),{}),update:()=>{var t;let{events:n,internal:r}=e.getState();(t=r.lastEvent)!=null&&t.current&&n.handlers&&n.handlers.onPointerMove(r.lastEvent.current)},connect:t=>{let{set:n,events:r}=e.getState();if(r.disconnect==null||r.disconnect(),n(e=>({events:{...e.events,connected:t}})),r.handlers)for(let e in r.handlers){let n=r.handlers[e],[i,a]=Av[e];t.addEventListener(i,n,{passive:a})}},disconnect:()=>{let{set:t,events:n}=e.getState();if(n.connected){if(n.handlers)for(let e in n.handlers){let t=n.handlers[e],[r]=Av[e];n.connected.removeEventListener(r,t)}t(e=>({events:{...e.events,connected:void 0}}))}}}}function Mv(e,t){let n;return(...r)=>{window.clearTimeout(n),n=window.setTimeout(()=>e(...r),t)}}function Nv({debounce:e,scroll:t,polyfill:n,offsetSize:r}={debounce:0,scroll:!1,offsetSize:!1}){let i=n||(typeof window>`u`?class{}:window.ResizeObserver);if(!i)throw Error(`This browser does not support ResizeObserver out of the box. See: https://github.com/react-spring/react-use-measure/#resize-observer-polyfills`);let[a,o]=(0,v.useState)({left:0,top:0,width:0,height:0,bottom:0,right:0,x:0,y:0}),s=(0,v.useRef)({element:null,scrollContainers:null,resizeObserver:null,lastBounds:a,orientationHandler:null}),c=e?typeof e==`number`?e:e.scroll:null,l=e?typeof e==`number`?e:e.resize:null,u=(0,v.useRef)(!1);(0,v.useEffect)(()=>(u.current=!0,()=>void(u.current=!1)));let[d,f,p]=(0,v.useMemo)(()=>{let e=()=>{if(!s.current.element)return;let{left:e,top:t,width:n,height:i,bottom:a,right:c,x:l,y:d}=s.current.element.getBoundingClientRect(),f={left:e,top:t,width:n,height:i,bottom:a,right:c,x:l,y:d};s.current.element instanceof HTMLElement&&r&&(f.height=s.current.element.offsetHeight,f.width=s.current.element.offsetWidth),Object.freeze(f),u.current&&!Rv(s.current.lastBounds,f)&&o(s.current.lastBounds=f)};return[e,l?Mv(e,l):e,c?Mv(e,c):e]},[o,r,c,l]);function m(){s.current.scrollContainers&&(s.current.scrollContainers.forEach(e=>e.removeEventListener(`scroll`,p,!0)),s.current.scrollContainers=null),s.current.resizeObserver&&(s.current.resizeObserver.disconnect(),s.current.resizeObserver=null),s.current.orientationHandler&&(`orientation`in screen&&`removeEventListener`in screen.orientation?screen.orientation.removeEventListener(`change`,s.current.orientationHandler):`onorientationchange`in window&&window.removeEventListener(`orientationchange`,s.current.orientationHandler))}function h(){s.current.element&&(s.current.resizeObserver=new i(p),s.current.resizeObserver.observe(s.current.element),t&&s.current.scrollContainers&&s.current.scrollContainers.forEach(e=>e.addEventListener(`scroll`,p,{capture:!0,passive:!0})),s.current.orientationHandler=()=>{p()},`orientation`in screen&&`addEventListener`in screen.orientation?screen.orientation.addEventListener(`change`,s.current.orientationHandler):`onorientationchange`in window&&window.addEventListener(`orientationchange`,s.current.orientationHandler))}return Fv(p,!!t),Pv(f),(0,v.useEffect)(()=>{m(),h()},[t,p,f]),(0,v.useEffect)(()=>m,[]),[e=>{!e||e===s.current.element||(m(),s.current.element=e,s.current.scrollContainers=Iv(e),h())},a,d]}function Pv(e){(0,v.useEffect)(()=>{let t=e;return window.addEventListener(`resize`,t),()=>void window.removeEventListener(`resize`,t)},[e])}function Fv(e,t){(0,v.useEffect)(()=>{if(t){let t=e;return window.addEventListener(`scroll`,t,{capture:!0,passive:!0}),()=>void window.removeEventListener(`scroll`,t,!0)}},[e,t])}function Iv(e){let t=[];if(!e||e===document.body)return t;let{overflow:n,overflowX:r,overflowY:i}=window.getComputedStyle(e);return[n,r,i].some(e=>e===`auto`||e===`scroll`)&&t.push(e),[...t,...Iv(e.parentElement)]}var Lv=[`x`,`y`,`top`,`bottom`,`left`,`right`,`width`,`height`],Rv=(e,t)=>Lv.every(n=>e[n]===t[n]);function zv({ref:e,children:t,fallback:n,resize:r,style:i,gl:a,events:o=jv,eventSource:s,eventPrefix:c,shadows:l,linear:u,flat:d,legacy:f,orthographic:p,frameloop:m,dpr:h,performance:g,raycaster:_,camera:y,scene:b,onPointerMissed:x,onCreated:S,...C}){v.useMemo(()=>H_(qf),[]);let w=Vg(),[T,E]=Nv({scroll:!0,debounce:{scroll:50,resize:0},...r}),D=v.useRef(null),O=v.useRef(null);v.useImperativeHandle(e,()=>D.current);let k=Bg(x),[A,ee]=v.useState(!1),[te,j]=v.useState(!1);if(A)throw A;if(te)throw te;let ne=v.useRef(null);return zg(()=>{let e=D.current;if(E.width>0&&E.height>0&&e){ne.current||=dv(e);async function n(){await ne.current.configure({gl:a,scene:b,events:o,shadows:l,linear:u,flat:d,legacy:f,orthographic:p,frameloop:m,dpr:h,performance:g,raycaster:_,camera:y,size:E,onPointerMissed:(...e)=>k.current==null?void 0:k.current(...e),onCreated:e=>{e.events.connect==null||e.events.connect(s?Lg(s)?s.current:s:O.current),c&&e.setEvents({compute:(e,t)=>{let n=e[c+`X`],r=e[c+`Y`];t.pointer.set(n/t.size.width*2-1,-(r/t.size.height)*2+1),t.raycaster.setFromCamera(t.pointer,t.camera)}}),S?.(e)}}),ne.current.render((0,Tg.jsx)(w,{children:(0,Tg.jsx)(Ug,{set:j,children:(0,Tg.jsx)(v.Suspense,{fallback:(0,Tg.jsx)(Hg,{set:ee}),children:t??null})})}))}n()}}),v.useEffect(()=>{let e=D.current;if(e)return()=>pv(e)},[]),(0,Tg.jsx)(`div`,{ref:O,style:{position:`relative`,width:`100%`,height:`100%`,overflow:`hidden`,pointerEvents:s?`none`:`auto`,...i},...C,children:(0,Tg.jsx)(`div`,{ref:T,style:{width:`100%`,height:`100%`},children:(0,Tg.jsx)(`canvas`,{ref:D,style:{display:`block`},children:n})})})}function Bv(e){return(0,Tg.jsx)(kg,{children:(0,Tg.jsx)(zv,{...e})})}function Vv(){let e=(0,v.useRef)();return b_((t,n)=>{e.current&&(e.current.rotation.x+=n*.4,e.current.rotation.y+=n*.6)}),(0,Tg.jsxs)(`mesh`,{ref:e,children:[(0,Tg.jsx)(`boxGeometry`,{args:[2,2,2]}),(0,Tg.jsx)(`meshStandardMaterial`,{color:`#00ffff`})]})}function Hv(){return(0,Tg.jsxs)(Bv,{camera:{position:[0,2,8],fov:62,near:.1,far:500},children:[(0,Tg.jsx)(`color`,{attach:`background`,args:[`#030304`]}),(0,Tg.jsx)(`ambientLight`,{intensity:.5}),(0,Tg.jsx)(`directionalLight`,{position:[5,8,5],intensity:2}),(0,Tg.jsx)(Vv,{})]})}(0,y.createRoot)(document.getElementById(`root`)).render((0,Tg.jsx)(v.StrictMode,{children:(0,Tg.jsx)(Hv,{})}));
+  `)+e.join(` > `)}return null},Ca.getPublicRootInstance=function(e){if(e=e.current,!e.child)return null;switch(e.child.tag){case 27:case 5:return Ja(e.child.stateNode);default:return e.child.stateNode}},Ca.injectIntoDevTools=function(){var e={bundleType:0,version:Ga,rendererPackageName:Ka,currentDispatcherRef:J,reconcilerVersion:`19.2.0`};if(qa!==null&&(e.rendererConfig=qa),typeof __REACT_DEVTOOLS_GLOBAL_HOOK__>`u`)e=!1;else{var t=__REACT_DEVTOOLS_GLOBAL_HOOK__;if(t.isDisabled||!t.supportsFiber)e=!0;else{try{kc=t.inject(e),Ac=t}catch{}e=!!t.checkDCE}}return e},Ca.isAlreadyRendering=function(){return!!(Q&6)},Ca.observeVisibleRects=function(e,t,n,i){if(!jo)throw Error(r(363));e=Ci(e,t);var a=Ro(e,n,i).disconnect;return{disconnect:function(){a()}}},Ca.shouldError=function(){return null},Ca.shouldSuspend=function(){return!1},Ca.startHostTransition=function(e,t,i,a){if(e.tag!==5)throw Error(r(476));var o=Cn(e).queue;Sn(e,o,t,Eo,i===null?n:function(){var t=Cn(e);return t.next===null&&(t=e.alternate.memoizedState),An(e,t.next.queue,{},wi()),i(a)})},Ca.updateContainer=function(e,t,n,r){var i=t.current,a=wi();return ba(i,a,e,t,n,r),a},Ca.updateContainerSync=function(e,t,n,r){return ba(t.current,2,e,t,n,r),2},Ca},e.exports.default=e.exports,Object.defineProperty(e.exports,"__esModule",{value:!0})}(k_)),k_.exports}({exports:{}}).exports;var M_;function N_(){return M_||(M_=1,O_.exports=j_()),O_.exports}var P_=D_(N_());function F_(e){let t=P_(e);return t.injectIntoDevTools(),t}var I_=0,L_={},R_=/^three(?=[A-Z])/,z_=e=>`${e[0].toUpperCase()}${e.slice(1)}`,B_=0,V_=e=>typeof e==`function`;function H_(e){if(V_(e)){let t=`${B_++}`;return L_[t]=e,t}Object.assign(L_,e)}function U_(e,t){let n=z_(e),r=L_[n];if(e!==`primitive`&&!r)throw Error(`R3F: ${n} is not part of the THREE namespace! Did you forget to extend? See: https://docs.pmnd.rs/react-three-fiber/api/objects#using-3rd-party-objects-declaratively`);if(e===`primitive`&&!t.object)throw Error(`R3F: Primitives without 'object' are invalid!`);if(t.args!==void 0&&!Array.isArray(t.args))throw Error(`R3F: The args prop must be an array!`)}function W_(e,t,n){var r;return e=z_(e)in L_?e:e.replace(R_,``),U_(e,t),e===`primitive`&&(r=t.object)!=null&&r.__r3f&&delete t.object.__r3f,Xg(t.object,n,e,t)}function G_(e){if(!e.isHidden){var t;e.props.attach&&(t=e.parent)!=null&&t.object?e_(e.parent,e):u_(e.object)&&(e.object.visible=!1),e.isHidden=!0,c_(e)}}function K_(e){if(e.isHidden){var t;e.props.attach&&(t=e.parent)!=null&&t.object?$g(e.parent,e):u_(e.object)&&e.props.visible!==!1&&(e.object.visible=!0),e.isHidden=!1,c_(e)}}function q_(e,t,n){let r=t.root.getState();if(e.parent||e.object===r.scene){if(!t.object){let e=L_[z_(t.type)];t.object=t.props.object??new e(...t.props.args??[]),t.object.__r3f=t}if(s_(t.object,t.props),t.props.attach)$g(e,t);else if(u_(t.object)&&u_(e.object)){let r=e.object.children.indexOf(n?.object);if(n&&r!==-1){let n=e.object.children.indexOf(t.object);if(n!==-1){e.object.children.splice(n,1);let i=n<r?r-1:r;e.object.children.splice(i,0,t.object)}else t.object.parent=e.object,e.object.children.splice(r,0,t.object),t.object.dispatchEvent({type:`added`}),e.object.dispatchEvent({type:`childadded`,child:t.object})}else e.object.add(t.object)}for(let e of t.children)q_(t,e);c_(t)}}function J_(e,t){if(t){if(t.parent===e){let n=e.children.indexOf(t);n!==-1&&e.children.splice(n,1)}t.parent=e,e.children.push(t),q_(e,t)}}function Y_(e,t,n){if(!t||!n)return;if(t.parent===e){let n=e.children.indexOf(t);n!==-1&&e.children.splice(n,1)}t.parent=e;let r=e.children.indexOf(n);r===-1?e.children.push(t):e.children.splice(r,0,t),q_(e,t,n)}function X_(e){if(typeof e.dispose==`function`){let t=()=>{try{e.dispose()}catch{}};typeof IS_REACT_ACT_ENVIRONMENT<`u`?t():(0,wg.unstable_scheduleCallback)(wg.unstable_IdlePriority,t)}}function Z_(e,t,n){if(!t)return;t.parent=null;let r=e.children.indexOf(t);r!==-1&&e.children.splice(r,1),t.props.attach?e_(e,t):u_(t.object)&&u_(e.object)&&(e.object.remove(t.object),m_(Fg(t),t.object));let i=t.props.dispose!==null&&n!==!1;for(let e=t.children.length-1;e>=0;e--){let n=t.children[e];Z_(t,n,i)}t.children.length=0,delete t.object.__r3f,i&&t.type!==`primitive`&&t.object.type!==`Scene`&&X_(t.object),n===void 0&&c_(t)}function Q_(e,t){for(let n of[e,e.alternate])if(n!==null){if(typeof n.ref==`function`){n.refCleanup==null||n.refCleanup();let e=n.ref(t);typeof e==`function`&&(n.refCleanup=e)}else n.ref&&(n.ref.current=t)}}var $_=[];function ev(){if($_.length!==0)try{tv()}finally{$_.length=0}}function tv(){for(let[e]of $_){let t=e.parent;if(t){e.props.attach?e_(t,e):u_(e.object)&&u_(t.object)&&t.object.remove(e.object);for(let t of e.children)t.props.attach?e_(e,t):u_(t.object)&&u_(e.object)&&e.object.remove(t.object)}e.isHidden&&K_(e),e.object.__r3f&&delete e.object.__r3f,e.type!==`primitive`&&X_(e.object)}for(let[e,t,n]of $_){e.props=t;let r=e.parent;if(r){let t=L_[z_(e.type)],i=e.object;e.object=e.props.object??new t(...e.props.args??[]),e.object.__r3f=e,Q_(n,e.object),p_(Fg(e),i,e.object),s_(e.object,e.props),e.props.attach?$g(r,e):u_(e.object)&&u_(r.object)&&r.object.add(e.object);for(let t of e.children)t.props.attach?$g(e,t):u_(t.object)&&u_(e.object)&&e.object.add(t.object);c_(e)}}}var nv=()=>{},rv={},iv=I_;function av(e){switch(e){case`beforetoggle`:case`cancel`:case`click`:case`close`:case`contextmenu`:case`copy`:case`cut`:case`auxclick`:case`dblclick`:case`dragend`:case`dragstart`:case`drop`:case`focusin`:case`focusout`:case`input`:case`invalid`:case`keydown`:case`keypress`:case`keyup`:case`mousedown`:case`mouseup`:case`paste`:case`pause`:case`play`:case`pointercancel`:case`pointerdown`:case`pointerup`:case`ratechange`:case`reset`:case`resize`:case`seeked`:case`submit`:case`touchcancel`:case`touchend`:case`touchstart`:case`volumechange`:case`change`:case`selectionchange`:case`compositionstart`:case`compositionend`:case`compositionupdate`:case`beforeinput`:case`blur`:case`fullscreenchange`:case`focus`:case`hashchange`:case`popstate`:case`select`:case`selectstart`:return w_;case`drag`:case`dragenter`:case`dragexit`:case`dragleave`:case`dragover`:case`mousemove`:case`mouseout`:case`mouseover`:case`pointermove`:case`pointerout`:case`pointerover`:case`scroll`:case`touchmove`:case`wheel`:case`mouseenter`:case`mouseleave`:case`pointerenter`:case`pointerleave`:return S_;case`message`:switch((0,wg.unstable_getCurrentPriorityLevel)()){case wg.unstable_ImmediatePriority:return w_;case wg.unstable_UserBlockingPriority:return S_;case wg.unstable_NormalPriority:case wg.unstable_LowPriority:return C_;case wg.unstable_IdlePriority:return T_;default:return C_}default:return C_}}function ov(e){typeof queueMicrotask==`function`?queueMicrotask(e):typeof Promise<`u`?Promise.resolve().then(e).catch(e=>{setTimeout(()=>{throw e})}):setTimeout(e)}var sv=F_({isPrimaryRenderer:!1,warnsIfNotActing:!1,supportsMutation:!0,supportsPersistence:!1,supportsHydration:!1,createInstance:W_,removeChild:Z_,appendChild:J_,appendInitialChild:J_,insertBefore:Y_,appendChildToContainer(e,t){let n=e.getState().scene.__r3f;t&&n&&J_(n,t)},removeChildFromContainer(e,t){let n=e.getState().scene.__r3f;t&&n&&Z_(n,t)},insertInContainerBefore(e,t,n){let r=e.getState().scene.__r3f;t&&n&&r&&Y_(r,t,n)},getRootHostContext:()=>rv,getChildHostContext:()=>rv,commitUpdate(e,t,n,r,i){var a;U_(t,r);let o=!1;if(e.type===`primitive`&&n.object!==r.object?o=!0:r.args?.length===n.args?.length?(a=r.args)!=null&&a.some((e,t)=>e!==n.args?.[t])&&(o=!0):o=!0,o)$_.push([e,Yg(r),i]);else{let t=i_(e,r),n=e.props.attach;e.props=Yg(r),n===void 0?delete e.props.attach:e.props.attach=n,Object.keys(t).length&&s_(e.object,t)}},finalizeInitialChildren:()=>!1,commitMount(){},getPublicInstance:e=>e?.object,prepareForCommit:()=>null,preparePortalMount:e=>Xg(e.getState().scene,e,``,{}),resetAfterCommit:ev,shouldSetTextContent:()=>!1,clearContainer:()=>!1,hideInstance:G_,unhideInstance:K_,createTextInstance:nv,hideTextInstance:nv,unhideTextInstance:nv,supportsMicrotasks:!0,scheduleMicrotask:ov,scheduleTimeout:typeof setTimeout==`function`?setTimeout:void 0,cancelTimeout:typeof clearTimeout==`function`?clearTimeout:void 0,noTimeout:-1,getInstanceFromNode:()=>null,beforeActiveInstanceBlur(){},afterActiveInstanceBlur(){},detachDeletedInstance(){},prepareScopeUpdate(){},getInstanceFromScope:()=>null,shouldAttemptEagerTransition:()=>!1,trackSchedulerEvent:()=>{},resolveEventType:()=>null,resolveEventTimeStamp:()=>-1.1,requestPostPaintCallback(){},maySuspendCommit:()=>!1,preloadInstance:()=>!0,suspendInstance(){},waitForCommitToBeReady:()=>null,NotPendingTransition:null,HostTransitionContext:v.createContext(null),setCurrentUpdatePriority(e){iv=e},getCurrentUpdatePriority(){return iv},resolveUpdatePriority(){if(iv!==I_)return iv;let e=typeof window<`u`?window.event?.type:void 0;return e===void 0?C_:av(e)},resetFormInstance(){},rendererPackageName:`@react-three/fiber`,rendererVersion:E_.version,applyViewTransitionName(e,t,n){},restoreViewTransitionName(e,t){},cancelViewTransitionName(e,t,n){},cancelRootViewTransitionName(e){},restoreRootViewTransitionName(e){},InstanceMeasurement:null,measureInstance:e=>null,wasInstanceInViewport:e=>!0,hasInstanceChanged:(e,t)=>!1,hasInstanceAffectedParent:(e,t)=>!1,suspendOnActiveViewTransition(e,t){},startGestureTransition:()=>null,startViewTransition:()=>null,stopViewTransition(e){},createViewTransitionInstance:e=>null,getCurrentGestureOffset(e){throw Error(`startGestureTransition is not yet supported in react-three-fiber.`)},cloneMutableInstance(e,t){return e},cloneMutableTextInstance(e){return e},cloneRootViewTransitionContainer(e){throw Error(`Not implemented.`)},removeRootViewTransitionClone(e,t){throw Error(`Not implemented.`)},createFragmentInstance:e=>null,updateFragmentInstanceFiber(e,t){},commitNewChildToFragmentInstance(e,t){},deleteChildFromFragmentInstance(e,t){},measureClonedInstance:e=>null,maySuspendCommitOnUpdate:(e,t,n)=>!1,maySuspendCommitInSyncRender:(e,t)=>!1,startSuspendingCommit:()=>null,getSuspendedCommitReason:(e,t)=>null}),cv=new Map,lv={objects:`shallow`,strict:!1};function uv(e,t){if(!t&&typeof HTMLCanvasElement<`u`&&e instanceof HTMLCanvasElement&&e.parentElement){let{width:t,height:n,top:r,left:i}=e.parentElement.getBoundingClientRect();return{width:t,height:n,top:r,left:i}}return!t&&typeof OffscreenCanvas<`u`&&e instanceof OffscreenCanvas?{width:e.width,height:e.height,top:0,left:0}:{width:0,height:0,top:0,left:0,...t}}function dv(e){let t=cv.get(e),n=t?.fiber,r=t?.store;t&&console.warn(`R3F.createRoot should only be called once!`);let i=typeof reportError==`function`?reportError:console.error,a=r||v_(Ov,kv),o=n||sv.createContainer(a,x_,null,!1,null,``,i,i,i,null);t||cv.set(e,{fiber:o,store:a});let s,c,l=!1,u=null;return{async configure(t={}){let n;u=new Promise(e=>n=e);let{gl:r,size:i,scene:o,events:d,onCreated:f,shadows:p=!1,linear:m=!1,flat:h=!1,legacy:g=!1,orthographic:_=!1,frameloop:v=`always`,dpr:y=[1,2],performance:b,raycaster:x,camera:S,onPointerMissed:C}=t,w=a.getState(),T=w.gl;if(!w.gl){let t={canvas:e,powerPreference:`high-performance`,antialias:!0,alpha:!0},n=typeof r==`function`?await r(t):r;T=g_(n)?n:new ug({...t,...r}),w.set({gl:T})}let E=w.raycaster;E||w.set({raycaster:E=new Wd});let{params:D,...O}=x||{};if(Kg.equ(O,E,lv)||s_(E,{...O}),Kg.equ(D,E.params,lv)||s_(E,{params:{...E.params,...D}}),!w.camera||w.camera===c&&!Kg.equ(c,S,lv)){c=S;let e=S?.isCamera,t=e?S:_?new ku(0,0,0,0,.1,1e3):new wu(75,0,.1,1e3);e||(t.position.z=5,S&&(s_(t,S),t.manual||(`aspect`in S||`left`in S||`right`in S||`bottom`in S||`top`in S)&&(t.manual=!0,t.updateProjectionMatrix())),!w.camera&&!(S!=null&&S.rotation)&&t.lookAt(0,0,0)),w.set({camera:t}),E.camera=t}if(!w.scene){let e;o!=null&&o.isScene?(e=o,Xg(e,a,``,{})):(e=new Gr,Xg(e,a,``,{}),o&&s_(e,o)),w.set({scene:e})}d&&!w.events.handlers&&w.set({events:d(a)});let k=uv(e,i);if(Kg.equ(k,w.size,lv)||w.setSize(k.width,k.height,k.top,k.left),y&&w.viewport.dpr!==Wg(y)&&w.setDpr(y),w.frameloop!==v&&w.setFrameloop(v),w.onPointerMissed||w.set({onPointerMissed:C}),b&&!Kg.equ(b,w.performance,lv)&&w.set(e=>({performance:{...e.performance,...b}})),!w.xr){let e=(e,t)=>{let n=a.getState();n.frameloop!==`never`&&kv(e,!0,n,t)},t=()=>{let t=a.getState();t.gl.xr.enabled=t.gl.xr.isPresenting,t.gl.xr.setAnimationLoop(t.gl.xr.isPresenting?e:null),t.gl.xr.isPresenting||Ov(t)},n={connect(){let e=a.getState().gl;e.xr.addEventListener(`sessionstart`,t),e.xr.addEventListener(`sessionend`,t)},disconnect(){let e=a.getState().gl;e.xr.removeEventListener(`sessionstart`,t),e.xr.removeEventListener(`sessionend`,t)}};typeof T.xr?.addEventListener==`function`&&n.connect(),w.set({xr:n})}if(T.shadowMap){let e=T.shadowMap.enabled,t=T.shadowMap.type;if(T.shadowMap.enabled=!!p,Kg.boo(p))T.shadowMap.type=2;else if(Kg.str(p)){let e={basic:0,percentage:1,soft:2,variance:3};T.shadowMap.type=e[p]??2}else Kg.obj(p)&&Object.assign(T.shadowMap,p);(e!==T.shadowMap.enabled||t!==T.shadowMap.type)&&(T.shadowMap.needsUpdate=!0)}return Wn.enabled=!g,l||(T.outputColorSpace=m?xt:bt,T.toneMapping=h?0:4),w.legacy!==g&&w.set(()=>({legacy:g})),w.linear!==m&&w.set(()=>({linear:m})),w.flat!==h&&w.set(()=>({flat:h})),r&&!Kg.fun(r)&&!g_(r)&&!Kg.equ(r,T,lv)&&s_(T,r),s=f,l=!0,n(),this},render(t){return!l&&!u&&this.configure(),u.then(()=>{sv.updateContainer((0,Tg.jsx)(fv,{store:a,children:t,onCreated:s,rootElement:e}),o,null,()=>void 0)}),a},unmount(){pv(e)}}}function fv({store:e,children:t,onCreated:n,rootElement:r}){return zg(()=>{let t=e.getState();t.set(e=>({internal:{...e.internal,active:!0}})),n&&n(t),e.getState().events.connected||t.events.connect==null||t.events.connect(r)},[]),(0,Tg.jsx)(__.Provider,{value:e,children:t})}function pv(e,t){let n=cv.get(e),r=n?.fiber;if(r){let i=n?.store.getState();i&&(i.internal.active=!1),sv.updateContainer(null,r,null,()=>{i&&setTimeout(()=>{try{var n,r,a,o;i.events.disconnect==null||i.events.disconnect(),(n=i.gl)==null||(r=n.renderLists)==null||r.dispose==null||r.dispose(),(a=i.gl)==null||a.forceContextLoss==null||a.forceContextLoss(),(o=i.gl)!=null&&o.xr&&i.xr.disconnect(),qg(i.scene),cv.delete(e),t&&t(e)}catch{}},500)})}}var mv=new Set,hv=new Set,gv=new Set;function _v(e,t){if(e.size)for(let{callback:n}of e.values())n(t)}function vv(e,t){switch(e){case`before`:return _v(mv,t);case`after`:return _v(hv,t);case`tail`:return _v(gv,t)}}var yv,bv;function xv(e,t,n){let r=t.clock.getDelta();t.frameloop===`never`&&typeof e==`number`&&(r=e-t.clock.elapsedTime,t.clock.oldTime=t.clock.elapsedTime,t.clock.elapsedTime=e),yv=t.internal.subscribers;for(let e=0;e<yv.length;e++)bv=yv[e],bv.ref.current(bv.store.getState(),r,n);return!t.internal.priority&&t.gl.render&&t.gl.render(t.scene,t.camera),t.internal.frames=Math.max(0,t.internal.frames-1),t.frameloop===`always`?1:t.internal.frames}var Sv=!1,Cv=!1,wv,Tv,Ev;function Dv(e){Tv=requestAnimationFrame(Dv),Sv=!0,wv=0,vv(`before`,e),Cv=!0;for(let n of cv.values()){var t;Ev=n.store.getState(),Ev.internal.active&&(Ev.frameloop===`always`||Ev.internal.frames>0)&&!((t=Ev.gl.xr)!=null&&t.isPresenting)&&(wv+=xv(e,Ev))}if(Cv=!1,vv(`after`,e),wv===0)return vv(`tail`,e),Sv=!1,cancelAnimationFrame(Tv)}function Ov(e,t=1){var n;if(!e)return cv.forEach(e=>Ov(e.store.getState(),t));(n=e.gl.xr)!=null&&n.isPresenting||!e.internal.active||e.frameloop===`never`||(t>1?e.internal.frames=Math.min(60,e.internal.frames+t):Cv?e.internal.frames=2:e.internal.frames=1,Sv||(Sv=!0,requestAnimationFrame(Dv)))}function kv(e,t=!0,n,r){if(t&&vv(`before`,e),n)xv(e,n,r);else for(let t of cv.values())xv(e,t.store.getState());t&&vv(`after`,e)}var Av={onClick:[`click`,!1],onContextMenu:[`contextmenu`,!1],onDoubleClick:[`dblclick`,!1],onWheel:[`wheel`,!0],onPointerDown:[`pointerdown`,!0],onPointerUp:[`pointerup`,!0],onPointerLeave:[`pointerleave`,!0],onPointerMove:[`pointermove`,!0],onPointerCancel:[`pointercancel`,!0],onLostPointerCapture:[`lostpointercapture`,!0]};function jv(e){let{handlePointer:t}=h_(e);return{priority:1,enabled:!0,compute(e,t,n){t.pointer.set(e.offsetX/t.size.width*2-1,-(e.offsetY/t.size.height)*2+1),t.raycaster.setFromCamera(t.pointer,t.camera)},connected:void 0,handlers:Object.keys(Av).reduce((e,n)=>({...e,[n]:t(n)}),{}),update:()=>{var t;let{events:n,internal:r}=e.getState();(t=r.lastEvent)!=null&&t.current&&n.handlers&&n.handlers.onPointerMove(r.lastEvent.current)},connect:t=>{let{set:n,events:r}=e.getState();if(r.disconnect==null||r.disconnect(),n(e=>({events:{...e.events,connected:t}})),r.handlers)for(let e in r.handlers){let n=r.handlers[e],[i,a]=Av[e];t.addEventListener(i,n,{passive:a})}},disconnect:()=>{let{set:t,events:n}=e.getState();if(n.connected){if(n.handlers)for(let e in n.handlers){let t=n.handlers[e],[r]=Av[e];n.connected.removeEventListener(r,t)}t(e=>({events:{...e.events,connected:void 0}}))}}}}function Mv(e,t){let n;return(...r)=>{window.clearTimeout(n),n=window.setTimeout(()=>e(...r),t)}}function Nv({debounce:e,scroll:t,polyfill:n,offsetSize:r}={debounce:0,scroll:!1,offsetSize:!1}){let i=n||(typeof window>`u`?class{}:window.ResizeObserver);if(!i)throw Error(`This browser does not support ResizeObserver out of the box. See: https://github.com/react-spring/react-use-measure/#resize-observer-polyfills`);let[a,o]=(0,v.useState)({left:0,top:0,width:0,height:0,bottom:0,right:0,x:0,y:0}),s=(0,v.useRef)({element:null,scrollContainers:null,resizeObserver:null,lastBounds:a,orientationHandler:null}),c=e?typeof e==`number`?e:e.scroll:null,l=e?typeof e==`number`?e:e.resize:null,u=(0,v.useRef)(!1);(0,v.useEffect)(()=>(u.current=!0,()=>void(u.current=!1)));let[d,f,p]=(0,v.useMemo)(()=>{let e=()=>{if(!s.current.element)return;let{left:e,top:t,width:n,height:i,bottom:a,right:c,x:l,y:d}=s.current.element.getBoundingClientRect(),f={left:e,top:t,width:n,height:i,bottom:a,right:c,x:l,y:d};s.current.element instanceof HTMLElement&&r&&(f.height=s.current.element.offsetHeight,f.width=s.current.element.offsetWidth),Object.freeze(f),u.current&&!Rv(s.current.lastBounds,f)&&o(s.current.lastBounds=f)};return[e,l?Mv(e,l):e,c?Mv(e,c):e]},[o,r,c,l]);function m(){s.current.scrollContainers&&(s.current.scrollContainers.forEach(e=>e.removeEventListener(`scroll`,p,!0)),s.current.scrollContainers=null),s.current.resizeObserver&&(s.current.resizeObserver.disconnect(),s.current.resizeObserver=null),s.current.orientationHandler&&(`orientation`in screen&&`removeEventListener`in screen.orientation?screen.orientation.removeEventListener(`change`,s.current.orientationHandler):`onorientationchange`in window&&window.removeEventListener(`orientationchange`,s.current.orientationHandler))}function h(){s.current.element&&(s.current.resizeObserver=new i(p),s.current.resizeObserver.observe(s.current.element),t&&s.current.scrollContainers&&s.current.scrollContainers.forEach(e=>e.addEventListener(`scroll`,p,{capture:!0,passive:!0})),s.current.orientationHandler=()=>{p()},`orientation`in screen&&`addEventListener`in screen.orientation?screen.orientation.addEventListener(`change`,s.current.orientationHandler):`onorientationchange`in window&&window.addEventListener(`orientationchange`,s.current.orientationHandler))}return Fv(p,!!t),Pv(f),(0,v.useEffect)(()=>{m(),h()},[t,p,f]),(0,v.useEffect)(()=>m,[]),[e=>{!e||e===s.current.element||(m(),s.current.element=e,s.current.scrollContainers=Iv(e),h())},a,d]}function Pv(e){(0,v.useEffect)(()=>{let t=e;return window.addEventListener(`resize`,t),()=>void window.removeEventListener(`resize`,t)},[e])}function Fv(e,t){(0,v.useEffect)(()=>{if(t){let t=e;return window.addEventListener(`scroll`,t,{capture:!0,passive:!0}),()=>void window.removeEventListener(`scroll`,t,!0)}},[e,t])}function Iv(e){let t=[];if(!e||e===document.body)return t;let{overflow:n,overflowX:r,overflowY:i}=window.getComputedStyle(e);return[n,r,i].some(e=>e===`auto`||e===`scroll`)&&t.push(e),[...t,...Iv(e.parentElement)]}var Lv=[`x`,`y`,`top`,`bottom`,`left`,`right`,`width`,`height`],Rv=(e,t)=>Lv.every(n=>e[n]===t[n]);function zv({ref:e,children:t,fallback:n,resize:r,style:i,gl:a,events:o=jv,eventSource:s,eventPrefix:c,shadows:l,linear:u,flat:d,legacy:f,orthographic:p,frameloop:m,dpr:h,performance:g,raycaster:_,camera:y,scene:b,onPointerMissed:x,onCreated:S,...C}){v.useMemo(()=>H_(qf),[]);let w=Vg(),[T,E]=Nv({scroll:!0,debounce:{scroll:50,resize:0},...r}),D=v.useRef(null),O=v.useRef(null);v.useImperativeHandle(e,()=>D.current);let k=Bg(x),[A,ee]=v.useState(!1),[te,j]=v.useState(!1);if(A)throw A;if(te)throw te;let ne=v.useRef(null);return zg(()=>{let e=D.current;if(E.width>0&&E.height>0&&e){ne.current||=dv(e);async function n(){await ne.current.configure({gl:a,scene:b,events:o,shadows:l,linear:u,flat:d,legacy:f,orthographic:p,frameloop:m,dpr:h,performance:g,raycaster:_,camera:y,size:E,onPointerMissed:(...e)=>k.current==null?void 0:k.current(...e),onCreated:e=>{e.events.connect==null||e.events.connect(s?Lg(s)?s.current:s:O.current),c&&e.setEvents({compute:(e,t)=>{let n=e[c+`X`],r=e[c+`Y`];t.pointer.set(n/t.size.width*2-1,-(r/t.size.height)*2+1),t.raycaster.setFromCamera(t.pointer,t.camera)}}),S?.(e)}}),ne.current.render((0,Tg.jsx)(w,{children:(0,Tg.jsx)(Ug,{set:j,children:(0,Tg.jsx)(v.Suspense,{fallback:(0,Tg.jsx)(Hg,{set:ee}),children:t??null})})}))}n()}}),v.useEffect(()=>{let e=D.current;if(e)return()=>pv(e)},[]),(0,Tg.jsx)(`div`,{ref:O,style:{position:`relative`,width:`100%`,height:`100%`,overflow:`hidden`,pointerEvents:s?`none`:`auto`,...i},...C,children:(0,Tg.jsx)(`div`,{ref:T,style:{width:`100%`,height:`100%`},children:(0,Tg.jsx)(`canvas`,{ref:D,style:{display:`block`},children:n})})})}function Bv(e){return(0,Tg.jsx)(kg,{children:(0,Tg.jsx)(zv,{...e})})}var Vv=`
+uniform float uTime;
+uniform float uOffset;
+
+varying float vElevation;
+varying vec2 vUv;
+
+
+// ------------------------------------------------------
+// 3D simplex noise
+// ------------------------------------------------------
+
+vec4 permute(vec4 x) {
+  return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+vec4 taylorInvSqrt(vec4 r) {
+  return 1.79284291400159 - 0.85373472095314 * r;
+}
+
+float snoise(vec3 v) {
+  const vec2 C = vec2(
+    1.0 / 6.0,
+    1.0 / 3.0
+  );
+
+  const vec4 D = vec4(
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  );
+
+  vec3 i = floor(
+    v + dot(v, C.yyy)
+  );
+
+  vec3 x0 =
+    v -
+    i +
+    dot(i, C.xxx);
+
+  vec3 g =
+    step(x0.yzx, x0.xyz);
+
+  vec3 l =
+    1.0 - g;
+
+  vec3 i1 =
+    min(g.xyz, l.zxy);
+
+  vec3 i2 =
+    max(g.xyz, l.zxy);
+
+  vec3 x1 =
+    x0 -
+    i1 +
+    C.xxx;
+
+  vec3 x2 =
+    x0 -
+    i2 +
+    2.0 * C.xxx;
+
+  vec3 x3 =
+    x0 -
+    1.0 +
+    3.0 * C.xxx;
+
+  i = mod(i, 289.0);
+
+  vec4 p =
+    permute(
+      permute(
+        permute(
+          i.z +
+          vec4(
+            0.0,
+            i1.z,
+            i2.z,
+            1.0
+          )
+        ) +
+        i.y +
+        vec4(
+          0.0,
+          i1.y,
+          i2.y,
+          1.0
+        )
+      ) +
+      i.x +
+      vec4(
+        0.0,
+        i1.x,
+        i2.x,
+        1.0
+      )
+    );
+
+  float n_ =
+    1.0 / 7.0;
+
+  vec3 ns =
+    n_ * D.wyz -
+    D.xzx;
+
+  vec4 j =
+    p -
+    49.0 *
+    floor(
+      p *
+      ns.z *
+      ns.z
+    );
+
+  vec4 x_ =
+    floor(j * ns.z);
+
+  vec4 y_ =
+    floor(
+      j -
+      7.0 * x_
+    );
+
+  vec4 x =
+    x_ * ns.x +
+    ns.yyyy;
+
+  vec4 y =
+    y_ * ns.x +
+    ns.yyyy;
+
+  vec4 h =
+    1.0 -
+    abs(x) -
+    abs(y);
+
+  vec4 b0 =
+    vec4(
+      x.xy,
+      y.xy
+    );
+
+  vec4 b1 =
+    vec4(
+      x.zw,
+      y.zw
+    );
+
+  vec4 s0 =
+    floor(b0) * 2.0 +
+    1.0;
+
+  vec4 s1 =
+    floor(b1) * 2.0 +
+    1.0;
+
+  vec4 sh =
+    -step(
+      h,
+      vec4(0.0)
+    );
+
+  vec4 a0 =
+    b0.xzyw +
+    s0.xzyw *
+    sh.xxyy;
+
+  vec4 a1 =
+    b1.xzyw +
+    s1.xzyw *
+    sh.zzww;
+
+  vec3 p0 =
+    vec3(a0.xy, h.x);
+
+  vec3 p1 =
+    vec3(a0.zw, h.y);
+
+  vec3 p2 =
+    vec3(a1.xy, h.z);
+
+  vec3 p3 =
+    vec3(a1.zw, h.w);
+
+  vec4 norm =
+    taylorInvSqrt(
+      vec4(
+        dot(p0, p0),
+        dot(p1, p1),
+        dot(p2, p2),
+        dot(p3, p3)
+      )
+    );
+
+  p0 *= norm.x;
+  p1 *= norm.y;
+  p2 *= norm.z;
+  p3 *= norm.w;
+
+  vec4 m =
+    max(
+      0.6 -
+      vec4(
+        dot(x0, x0),
+        dot(x1, x1),
+        dot(x2, x2),
+        dot(x3, x3)
+      ),
+      0.0
+    );
+
+  m = m * m;
+
+  return 42.0 *
+    dot(
+      m * m,
+      vec4(
+        dot(p0, x0),
+        dot(p1, x1),
+        dot(p2, x2),
+        dot(p3, x3)
+      )
+    );
+}
+
+
+// ------------------------------------------------------
+// Terrain
+// ------------------------------------------------------
+
+void main() {
+  vUv = uv;
+
+  vec3 pos = position;
+
+  // Makes the terrain effectively endless.
+  float worldY =
+    pos.y + uOffset;
+
+
+  // ----------------------------------------------------
+  // Layer several noise frequencies
+  // ----------------------------------------------------
+
+  float amplitude = 1.0;
+  float frequency = 0.035;
+  float noiseValue = 0.0;
+
+  for (int i = 0; i < 5; i++) {
+    noiseValue +=
+      amplitude *
+      snoise(
+        vec3(
+          pos.x * frequency,
+          worldY * frequency,
+          uTime * 0.005
+        )
+      );
+
+    amplitude *= 0.5;
+    frequency *= 2.15;
+  }
+
+
+  // ----------------------------------------------------
+  // Turn noise into sharper mountain ridges
+  // ----------------------------------------------------
+
+  float ridged =
+    1.0 -
+    abs(noiseValue);
+
+  float elevation =
+    pow(ridged, 2.0) *
+    22.0 -
+    6.0;
+
+
+  // ----------------------------------------------------
+  // Carve a winding valley down the center
+  // ----------------------------------------------------
+
+  float valley =
+    smoothstep(
+      4.0,
+      26.0,
+      abs(
+        pos.x +
+        sin(worldY * 0.05) *
+        8.0
+      )
+    );
+
+  elevation =
+    mix(
+      -4.0,
+      elevation,
+      valley
+    );
+
+
+  // PlaneGeometry starts flat.
+  // Displace its Z axis to create mountains.
+  pos.z += elevation;
+
+
+  // Send normalized height to the fragment shader.
+  vElevation =
+    clamp(
+      (elevation + 6.0) / 24.0,
+      0.0,
+      1.0
+    );
+
+
+  gl_Position =
+    projectionMatrix *
+    modelViewMatrix *
+    vec4(pos, 1.0);
+}
+`,Hv=`
+uniform float uTime;
+uniform float uOffset;
+uniform float uGlitchIntensity;
+uniform float uWire;
+
+varying float vElevation;
+varying vec2 vUv;
+
+
+float hash(float n) {
+  return fract(
+    sin(n) *
+    43758.5453123
+  );
+}
+
+
+float hash2(vec2 p) {
+  return fract(
+    sin(
+      dot(
+        p,
+        vec2(
+          127.1,
+          311.7
+        )
+      )
+    ) *
+    43758.5453123
+  );
+}
+
+
+void main() {
+  vec2 uv = vUv;
+  float elevation = vElevation;
+
+
+  // ----------------------------------------------------
+  // Horizontal glitch tearing
+  // ----------------------------------------------------
+
+  float bandCount = 60.0;
+
+  float band =
+    floor(
+      (
+        uv.y +
+        uOffset / 320.0
+      ) *
+      bandCount +
+      floor(uTime * 3.0) *
+      7.0
+    );
+
+  float randomBand =
+    hash(band);
+
+  float threshold =
+    1.0 -
+    (
+      0.18 +
+      uGlitchIntensity *
+      0.45
+    );
+
+  float tear =
+    step(
+      threshold,
+      randomBand
+    );
+
+  float tearAmount =
+    (
+      hash(
+        band + 13.7
+      ) -
+      0.5
+    ) *
+    tear *
+    (
+      0.25 +
+      uGlitchIntensity *
+      1.2
+    );
+
+  uv.x += tearAmount;
+
+  elevation +=
+    tearAmount *
+    2.2;
+
+  elevation =
+    clamp(
+      elevation,
+      0.0,
+      1.0
+    );
+
+
+  // ----------------------------------------------------
+  // Neon terrain palette
+  // ----------------------------------------------------
+
+  vec3 deepBlue =
+    vec3(
+      0.02,
+      0.05,
+      0.25
+    );
+
+  vec3 cyan =
+    vec3(
+      0.0,
+      0.75,
+      0.95
+    );
+
+  vec3 magenta =
+    vec3(
+      1.0,
+      0.12,
+      0.55
+    );
+
+  vec3 orange =
+    vec3(
+      1.0,
+      0.5,
+      0.12
+    );
+
+  vec3 cream =
+    vec3(
+      1.0,
+      0.88,
+      0.62
+    );
+
+
+  vec3 color =
+    deepBlue;
+
+  color =
+    mix(
+      color,
+      cyan,
+      smoothstep(
+        0.05,
+        0.28,
+        elevation
+      )
+    );
+
+  color =
+    mix(
+      color,
+      magenta,
+      smoothstep(
+        0.25,
+        0.48,
+        elevation
+      )
+    );
+
+  color =
+    mix(
+      color,
+      orange,
+      smoothstep(
+        0.45,
+        0.68,
+        elevation
+      )
+    );
+
+  color =
+    mix(
+      color,
+      cream,
+      smoothstep(
+        0.68,
+        0.92,
+        elevation
+      )
+    );
+
+
+  // ----------------------------------------------------
+  // RGB corruption inside glitch bands
+  // ----------------------------------------------------
+
+  float channelShift =
+    tear *
+    (
+      0.15 +
+      uGlitchIntensity *
+      0.6
+    );
+
+  color.r =
+    mix(
+      color.r,
+      color.b,
+      channelShift *
+      hash(
+        band + 3.1
+      )
+    );
+
+  color.g =
+    mix(
+      color.g,
+      color.r,
+      channelShift *
+      hash(
+        band + 5.9
+      )
+    );
+
+
+  // ----------------------------------------------------
+  // Fine digital grain
+  // ----------------------------------------------------
+
+  color +=
+    (
+      hash2(
+        uv * 500.0 +
+        uTime
+      ) -
+      0.5
+    ) *
+    0.06;
+
+
+  // ----------------------------------------------------
+  // Wireframe pass
+  // ----------------------------------------------------
+
+  if (uWire > 0.5) {
+    vec3 wireColor =
+      mix(
+        vec3(
+          0.1,
+          0.9,
+          0.4
+        ),
+        color,
+        0.55
+      );
+
+    gl_FragColor =
+      vec4(
+        wireColor * 0.5,
+        0.55
+      );
+  } else {
+    gl_FragColor =
+      vec4(
+        color,
+        1.0
+      );
+  }
+}
+`,Uv={distance:0,smooth:0,velocity:0,intensity:.12};function Wv(e){return new yl({vertexShader:Vv,fragmentShader:Hv,uniforms:{uTime:{value:0},uOffset:{value:0},uGlitchIntensity:{value:.12},uWire:{value:+!!e}},wireframe:e,transparent:e,depthWrite:!e})}function Gv(){let e=(0,v.useRef)(),t=(0,v.useRef)(0),n=(0,v.useMemo)(()=>new Qc(240,320,256,340),[]),r=(0,v.useMemo)(()=>Wv(!1),[]),i=(0,v.useMemo)(()=>Wv(!0),[]);return(0,v.useEffect)(()=>()=>{n.dispose(),r.dispose(),i.dispose()},[n,r,i]),b_(({camera:n},a)=>{t.current+=a,e.current&&(e.current.position.z=n.position.z-60),[r,i].forEach(e=>{e.uniforms.uTime.value=t.current,e.uniforms.uOffset.value=Uv.smooth,e.uniforms.uGlitchIntensity.value=Uv.intensity})}),(0,Tg.jsxs)(`group`,{ref:e,rotation:[-Math.PI/2,0,0],position:[0,0,-60],children:[(0,Tg.jsx)(`mesh`,{geometry:n,material:r}),(0,Tg.jsx)(`mesh`,{geometry:n,material:i,position:[0,0,.15]})]})}function Kv(){return b_((e,t)=>{Uv.smooth+=12*t,Uv.distance=Uv.smooth,Uv.intensity=.12}),null}function qv(){return(0,Tg.jsxs)(Bv,{camera:{position:[0,8.5,16],fov:62,near:.1,far:500},dpr:[1,1.5],gl:{antialias:!1,powerPreference:`high-performance`},children:[(0,Tg.jsx)(`color`,{attach:`background`,args:[`#030304`]}),(0,Tg.jsx)(`fog`,{attach:`fog`,args:[`#030304`,60,220]}),(0,Tg.jsx)(Gv,{}),(0,Tg.jsx)(Kv,{})]})}(0,y.createRoot)(document.getElementById(`root`)).render((0,Tg.jsx)(v.StrictMode,{children:(0,Tg.jsx)(qv,{})}));

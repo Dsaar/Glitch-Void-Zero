@@ -1,46 +1,53 @@
-import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 
-function RotatingCube() {
-  const cubeRef = useRef();
+import GlitchTerrain from "./components/glitch/GlitchTerrain";
+import TerrainPreviewRig from "./components/glitch/TerrainPreviewRig";
 
-  useFrame((_, delta) => {
-    if (!cubeRef.current) return;
-
-    cubeRef.current.rotation.x += delta * 0.4;
-    cubeRef.current.rotation.y += delta * 0.6;
-  });
-
-  return (
-    <mesh ref={cubeRef}>
-      <boxGeometry args={[2, 2, 2]} />
-      <meshStandardMaterial color="#00ffff" />
-    </mesh>
-  );
-}
 
 function App() {
   return (
     <Canvas
       camera={{
-        position: [0, 2, 8],
+        position: [
+          0,
+          8.5,
+          16,
+        ],
         fov: 62,
         near: 0.1,
         far: 500,
       }}
+      dpr={[
+        1,
+        1.5,
+      ]}
+      gl={{
+        antialias: false,
+        powerPreference: "high-performance",
+      }}
     >
-      <color attach="background" args={["#030304"]} />
-
-      <ambientLight intensity={0.5} />
-
-      <directionalLight
-        position={[5, 8, 5]}
-        intensity={2}
+      <color
+        attach="background"
+        args={[
+          "#030304",
+        ]}
       />
 
-      <RotatingCube />
+      <fog
+        attach="fog"
+        args={[
+          "#030304",
+          60,
+          220,
+        ]}
+      />
+
+      <GlitchTerrain />
+
+      <TerrainPreviewRig />
     </Canvas>
   );
 }
+
 
 export default App;
