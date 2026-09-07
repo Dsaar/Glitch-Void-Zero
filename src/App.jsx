@@ -2,11 +2,15 @@ import {
   Canvas,
 } from "@react-three/fiber";
 
+import AimReticle from "./components/game/AimReticle";
+
 import FlightRig from "./components/game/FlightRig";
 
 import GameStateOverlay from "./components/game/GameStateOverlay";
 
 import PlayerShip from "./components/game/PlayerShip";
+
+import Projectile from "./components/game/Projectile";
 
 import {
   useGameStore,
@@ -29,6 +33,13 @@ function App() {
     useGameStore(
       (state) =>
         state.phase
+    );
+
+
+  const projectiles =
+    useGameStore(
+      (state) =>
+        state.projectiles
     );
 
 
@@ -65,6 +76,10 @@ function App() {
             "high-performance",
         }}
       >
+        {/* -------------------------------------------- */}
+        {/* Background */}
+        {/* -------------------------------------------- */}
+
         <color
           attach="background"
           args={[
@@ -82,6 +97,10 @@ function App() {
           ]}
         />
 
+
+        {/* -------------------------------------------- */}
+        {/* Lighting */}
+        {/* -------------------------------------------- */}
 
         <ambientLight
           intensity={1.4}
@@ -108,19 +127,57 @@ function App() {
         />
 
 
+        {/* -------------------------------------------- */}
+        {/* Environment */}
+        {/* -------------------------------------------- */}
+
         <NeonStarfield />
 
 
         <GlitchTerrain />
 
 
+        {/* -------------------------------------------- */}
+        {/* Flight system */}
+        {/* -------------------------------------------- */}
+
         <FlightRig />
 
+
+        {/* -------------------------------------------- */}
+        {/* Player */}
+        {/* -------------------------------------------- */}
 
         {phase ===
           "playing" && (
             <PlayerShip />
           )}
+
+
+        {/* -------------------------------------------- */}
+        {/* Aim reticle */}
+        {/* -------------------------------------------- */}
+
+        {phase ===
+          "playing" && (
+            <AimReticle />
+          )}
+
+
+        {/* -------------------------------------------- */}
+        {/* Projectiles */}
+        {/* -------------------------------------------- */}
+
+        {projectiles.map(
+          (projectile) => (
+            <Projectile
+              key={
+                projectile.id
+              }
+              {...projectile}
+            />
+          )
+        )}
       </Canvas>
     </>
   );

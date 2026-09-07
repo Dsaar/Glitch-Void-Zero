@@ -1,5 +1,9 @@
 import { create } from "zustand";
 
+let nextId = 1;
+
+export const genId = () =>
+	nextId++;
 
 // ------------------------------------------------------
 // Mutable player position
@@ -31,6 +35,8 @@ export const useGameStore = create((set) => ({
 
 	startedAt: 0,
 
+	projectiles: [],
+
 
 	startGame: () => {
 		playerState.x = 0;
@@ -42,6 +48,7 @@ export const useGameStore = create((set) => ({
 			lives: 3,
 			startedAt:
 				performance.now() / 1000,
+			projectiles: [],
 		});
 	},
 
@@ -79,5 +86,28 @@ export const useGameStore = create((set) => ({
 						: state.phase,
 			};
 		});
+	},
+
+	spawnProjectile: (position) => {
+		set((state) => ({
+			projectiles: [
+				...state.projectiles,
+				{
+					id: genId(),
+					position,
+				},
+			],
+		}));
+	},
+
+
+	removeProjectile: (id) => {
+		set((state) => ({
+			projectiles:
+				state.projectiles.filter(
+					(projectile) =>
+						projectile.id !== id
+				),
+		}));
 	},
 }));

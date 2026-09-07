@@ -23,24 +23,36 @@ const MIN_Y = 1.5;
 const MAX_Y = 12;
 
 
-// How strongly the ship banks left/right.
+// ------------------------------------------------------
+// Flight animation
+// ------------------------------------------------------
+
 const MAX_BANK =
 	THREE.MathUtils.degToRad(
 		24
 	);
 
-
-// How strongly the nose pitches
-// during vertical movement.
 const MAX_PITCH =
 	THREE.MathUtils.degToRad(
 		10
 	);
 
 
+// ------------------------------------------------------
+// Weapon settings
+// ------------------------------------------------------
+
+const FIRE_INTERVAL = 0.18;
+
+const PROJECTILE_START_Z = -2.5;
+
+
 export default function PlayerShip() {
 	const shipRef =
 		useRef();
+
+	const fireCooldown =
+		useRef(0);
 
 
 	useFrame((_, delta) => {
@@ -55,6 +67,14 @@ export default function PlayerShip() {
 		) {
 			return;
 		}
+
+
+		// --------------------------------------------------
+		// Update weapon cooldown
+		// --------------------------------------------------
+
+		fireCooldown.current -=
+			delta;
 
 
 		// --------------------------------------------------
@@ -114,6 +134,7 @@ export default function PlayerShip() {
 			const diagonalFactor =
 				Math.SQRT1_2;
 
+
 			horizontal *=
 				diagonalFactor;
 
@@ -123,7 +144,7 @@ export default function PlayerShip() {
 
 
 		// --------------------------------------------------
-		// Update position
+		// Update player position
 		// --------------------------------------------------
 
 		playerState.x +=
@@ -139,7 +160,7 @@ export default function PlayerShip() {
 
 
 		// --------------------------------------------------
-		// Clamp to playable area
+		// Keep player inside playable area
 		// --------------------------------------------------
 
 		playerState.x =
@@ -166,13 +187,14 @@ export default function PlayerShip() {
 			shipRef.current.position.x =
 				playerState.x;
 
+
 			shipRef.current.position.y =
 				playerState.y;
 
 
-			// ----------------------------------------------
-			// Smooth banking
-			// ----------------------------------------------
+			// ------------------------------------------------
+			// Banking
+			// ------------------------------------------------
 
 			const targetBank =
 				-horizontal *
@@ -188,9 +210,9 @@ export default function PlayerShip() {
 				);
 
 
-			// ----------------------------------------------
-			// Smooth pitch
-			// ----------------------------------------------
+			// ------------------------------------------------
+			// Pitch
+			// ------------------------------------------------
 
 			const targetPitch =
 				-vertical *
@@ -205,13 +227,34 @@ export default function PlayerShip() {
 					delta
 				);
 		}
+
+
+		// --------------------------------------------------
+		// Fire weapon
+		// --------------------------------------------------
+
+		if (
+			keys.Space &&
+			fireCooldown.current <= 0
+		) {
+			fireCooldown.current =
+				FIRE_INTERVAL;
+
+
+			useGameStore
+				.getState()
+				.spawnProjectile({
+					x: playerState.x,
+					y: playerState.y,
+					z: PROJECTILE_START_Z,
+				});
+		}
 	});
 
 
 	return (
 		<group
 			ref={shipRef}
-
 			position={[
 				playerState.x,
 				playerState.y,
