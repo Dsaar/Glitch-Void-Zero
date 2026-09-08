@@ -2,19 +2,11 @@ import {
   Canvas,
 } from "@react-three/fiber";
 
-import AimReticle from "./components/game/AimReticle";
-
 import FlightRig from "./components/game/FlightRig";
 
+import GameScene from "./components/game/GameScene";
+
 import GameStateOverlay from "./components/game/GameStateOverlay";
-
-import PlayerShip from "./components/game/PlayerShip";
-
-import Projectile from "./components/game/Projectile";
-
-import {
-  useGameStore,
-} from "./components/game/gameStore";
 
 import {
   useKeyboard,
@@ -27,20 +19,6 @@ import NeonStarfield from "./components/glitch/NeonStarfield";
 
 function App() {
   useKeyboard();
-
-
-  const phase =
-    useGameStore(
-      (state) =>
-        state.phase
-    );
-
-
-  const projectiles =
-    useGameStore(
-      (state) =>
-        state.projectiles
-    );
 
 
   return (
@@ -103,7 +81,9 @@ function App() {
         {/* -------------------------------------------- */}
 
         <ambientLight
-          intensity={1.4}
+          intensity={
+            1.4
+          }
         />
 
 
@@ -113,6 +93,7 @@ function App() {
             10,
             8,
           ]}
+
           intensity={3}
         />
 
@@ -123,6 +104,7 @@ function App() {
             4,
             -5,
           ]}
+
           intensity={1.5}
         />
 
@@ -138,46 +120,17 @@ function App() {
 
 
         {/* -------------------------------------------- */}
-        {/* Flight system */}
+        {/* Flight */}
         {/* -------------------------------------------- */}
 
         <FlightRig />
 
 
         {/* -------------------------------------------- */}
-        {/* Player */}
+        {/* Gameplay / physics */}
         {/* -------------------------------------------- */}
 
-        {phase ===
-          "playing" && (
-            <PlayerShip />
-          )}
-
-
-        {/* -------------------------------------------- */}
-        {/* Aim reticle */}
-        {/* -------------------------------------------- */}
-
-        {phase ===
-          "playing" && (
-            <AimReticle />
-          )}
-
-
-        {/* -------------------------------------------- */}
-        {/* Projectiles */}
-        {/* -------------------------------------------- */}
-
-        {projectiles.map(
-          (projectile) => (
-            <Projectile
-              key={
-                projectile.id
-              }
-              {...projectile}
-            />
-          )
-        )}
+        <GameScene />
       </Canvas>
     </>
   );

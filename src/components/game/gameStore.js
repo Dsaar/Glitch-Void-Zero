@@ -1,19 +1,20 @@
 import { create } from "zustand";
 
+
 let nextId = 1;
 
-export const genId = () =>
-	nextId++;
+
+export const genId = () => {
+	const id = nextId;
+
+	nextId += 1;
+
+	return id;
+};
+
 
 // ------------------------------------------------------
 // Mutable player position
-// ------------------------------------------------------
-//
-// The Three.js render loop will read/write this directly.
-//
-// We deliberately do NOT put constantly changing X/Y
-// coordinates into React state because that would cause
-// React to re-render dozens of times per second.
 // ------------------------------------------------------
 
 export const playerState = {
@@ -37,18 +38,35 @@ export const useGameStore = create((set) => ({
 
 	projectiles: [],
 
+	enemies: [],
+
+	explosions: [],
+
+
+	// ----------------------------------------------------
+	// Game state
+	// ----------------------------------------------------
 
 	startGame: () => {
 		playerState.x = 0;
 		playerState.y = 5;
 
+
 		set({
 			phase: "playing",
+
 			score: 0,
+
 			lives: 3,
+
 			startedAt:
 				performance.now() / 1000,
+
 			projectiles: [],
+
+			enemies: [],
+
+			explosions: [],
 		});
 	},
 
@@ -60,6 +78,10 @@ export const useGameStore = create((set) => ({
 	},
 
 
+	// ----------------------------------------------------
+	// Score
+	// ----------------------------------------------------
+
 	addScore: (amount) => {
 		set((state) => ({
 			score:
@@ -69,6 +91,10 @@ export const useGameStore = create((set) => ({
 	},
 
 
+	// ----------------------------------------------------
+	// Lives
+	// ----------------------------------------------------
+
 	loseLife: () => {
 		set((state) => {
 			const nextLives =
@@ -76,6 +102,7 @@ export const useGameStore = create((set) => ({
 					state.lives - 1,
 					0
 				);
+
 
 			return {
 				lives: nextLives,
@@ -88,12 +115,21 @@ export const useGameStore = create((set) => ({
 		});
 	},
 
-	spawnProjectile: (position) => {
+
+	// ----------------------------------------------------
+	// Projectiles
+	// ----------------------------------------------------
+
+	spawnProjectile: (
+		position
+	) => {
 		set((state) => ({
 			projectiles: [
 				...state.projectiles,
+
 				{
 					id: genId(),
+
 					position,
 				},
 			],
@@ -101,12 +137,77 @@ export const useGameStore = create((set) => ({
 	},
 
 
-	removeProjectile: (id) => {
+	removeProjectile: (
+		id
+	) => {
 		set((state) => ({
 			projectiles:
 				state.projectiles.filter(
 					(projectile) =>
 						projectile.id !== id
+				),
+		}));
+	},
+
+
+	// ----------------------------------------------------
+	// Enemies
+	// ----------------------------------------------------
+
+	spawnEnemy: (
+		enemy
+	) => {
+		set((state) => ({
+			enemies: [
+				...state.enemies,
+				enemy,
+			],
+		}));
+	},
+
+
+	removeEnemy: (
+		id
+	) => {
+		set((state) => ({
+			enemies:
+				state.enemies.filter(
+					(enemy) =>
+						enemy.id !== id
+				),
+		}));
+	},
+
+
+	// ----------------------------------------------------
+	// Explosions
+	// ----------------------------------------------------
+
+	addExplosion: (
+		position
+	) => {
+		set((state) => ({
+			explosions: [
+				...state.explosions,
+
+				{
+					id: genId(),
+
+					position,
+				},
+			],
+		}));
+	},
+
+
+	removeExplosion: (
+		id
+	) => {
+		set((state) => ({
+			explosions:
+				state.explosions.filter(
+					(explosion) =>
+						explosion.id !== id
 				),
 		}));
 	},

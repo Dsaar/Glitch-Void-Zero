@@ -1,73 +1,240 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import {
+	useRef,
+} from "react";
+
+import {
+	useFrame,
+} from "@react-three/fiber";
+
+import {
+	CuboidCollider,
+	interactionGroups,
+	RigidBody,
+} from "@react-three/rapier";
 
 import {
 	useGameStore,
 } from "./gameStore";
 
 
-const PROJECTILE_SPEED = 120;
+const PROJECTILE_SPEED =
+	120;
 
-const PROJECTILE_LIMIT = -210;
+const PROJECTILE_LIMIT =
+	-210;
 
 
 export default function Projectile({
 	id,
 	position,
 }) {
-	const meshRef = useRef();
+	const bodyRef =
+		useRef();
 
 	const zRef =
 		useRef(
 			position.z
 		);
 
-
-	useFrame((_, delta) => {
-		zRef.current -=
-			PROJECTILE_SPEED *
-			delta;
+	const hitRef =
+		useRef(false);
 
 
-		if (meshRef.current) {
-			meshRef.current.position.z =
-				zRef.current;
+	// ----------------------------------------------------
+	// Move projectile
+	// ----------------------------------------------------
+
+	useFrame(
+		(
+			_,
+			delta
+		) => {
+			zRef.current -=
+				PROJECTILE_SPEED *
+				delta;
+
+
+			if (
+				bodyRef.current
+			) {
+				bodyRef.current
+					.setNextKinematicTranslation({
+						x:
+							position.x,
+
+						y:
+							position.y,
+
+						z:
+							zRef.current,
+					});
+			}
+
+
+			if (
+				zRef.current <
+				PROJECTILE_LIMIT
+			) {
+				useGameStore
+					.getState()
+					.removeProjectile(
+						id
+					);
+			}
 		}
+	);
+
+
+	// ----------------------------------------------------
+	// Projectile → enemy
+	// ----------------------------------------------------
+
+	const handleHit = ({
+		other,
+	}) => {
+		if (
+			hitRef.current
+		) {
+			return;
+		}
+
+
+		const enemyData =
+			other.rigidBody
+				?.userData;
 
 
 		if (
-			zRef.current <
-			PROJECTILE_LIMIT
+			enemyData?.type !==
+			"enemy"
 		) {
-			useGameStore
-				.getState()
-				.removeProjectile(
-					id
-				);
+			return;
 		}
-	});
+
+
+		hitRef.current =
+			true;
+
+
+		const {
+			addExplosion,
+			removeEnemy,
+			removeProjectile,
+			addScore,
+		} =
+			useGameStore.getState();
+
+
+		let hitPosition = {
+			x:
+				position.x,
+
+			y:
+				position.y,
+
+			z:
+				zRef.current,
+		};
+
+
+		if (
+			other.rigidBody
+		) {
+			const translation =
+				other.rigidBody
+					.translation();
+
+
+			hitPosition = {
+				x:
+					translation.x,
+
+				y:
+					translation.y,
+
+				z:
+					translation.z,
+			};
+		}
+
+
+		addExplosion(
+			hitPosition
+		);
+
+
+		removeEnemy(
+			enemyData.id
+		);
+
+
+		removeProjectile(
+			id
+		);
+
+
+		addScore(
+			100
+		);
+	};
 
 
 	return (
-		<mesh
-			ref={meshRef}
+		<RigidBody
+			ref={bodyRef}
+
+			type="kinematicPosition"
+
+			colliders={false}
+
 			position={[
 				position.x,
 				position.y,
 				position.z,
 			]}
+
+			userData={{
+				type:
+					"projectile",
+			}}
 		>
-			<boxGeometry
+			<CuboidCollider
 				args={[
-					0.18,
-					0.18,
-					2.6,
+					0.16,
+					0.16,
+					1.3,
 				]}
+
+				sensor
+
+				collisionGroups={
+					interactionGroups(
+						1,
+						[
+							2,
+						]
+					)
+				}
+
+				onIntersectionEnter={
+					handleHit
+				}
 			/>
 
-			<meshBasicMaterial
-				color="#9dfdff"
-			/>
-		</mesh>
+
+			<mesh>
+				<boxGeometry
+					args={[
+						0.2,
+						0.2,
+						2.6,
+					]}
+				/>
+
+				<meshBasicMaterial
+					color="#9dfdff"
+				/>
+			</mesh>
+		</RigidBody>
 	);
 }
