@@ -1,5 +1,17 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import {
+	useRef,
+} from "react";
+
+import {
+	useFrame,
+} from "@react-three/fiber";
+
+import {
+	CuboidCollider,
+	interactionGroups,
+	RigidBody,
+} from "@react-three/rapier";
+
 import * as THREE from "three";
 
 import {
@@ -7,12 +19,17 @@ import {
 } from "./useKeyboard";
 
 import {
+	invulnState,
 	playerState,
 	useGameStore,
 } from "./gameStore";
 
 import ShipModel from "./ShipModel";
 
+
+// ------------------------------------------------------
+// Movement
+// ------------------------------------------------------
 
 const MOVE_SPEED = 10;
 
@@ -39,229 +56,407 @@ const MAX_PITCH =
 
 
 // ------------------------------------------------------
-// Weapon settings
+// Weapon
 // ------------------------------------------------------
 
-const FIRE_INTERVAL = 0.18;
+const FIRE_INTERVAL =
+	0.18;
 
-const PROJECTILE_START_Z = -2.5;
+const PROJECTILE_START_Z =
+	-2.5;
+
+
+// ------------------------------------------------------
+// Player collider
+// ------------------------------------------------------
+//
+// Rapier uses half-extents for CuboidCollider.
+//
+// Therefore:
+// x = 1.1 means total width 2.2
+// y = 0.5 means total height 1.0
+// z = 1.5 means total length 3.0
+// ------------------------------------------------------
+
+const PLAYER_COLLIDER = [
+	1.1,
+	0.5,
+	1.5,
+];
 
 
 export default function PlayerShip() {
-	const shipRef =
+	const bodyRef =
+		useRef();
+
+	const visualRef =
 		useRef();
 
 	const fireCooldown =
 		useRef(0);
 
 
-	useFrame((_, delta) => {
-		const phase =
-			useGameStore
-				.getState()
-				.phase;
+	// ----------------------------------------------------
+	// Enemy collision
+	// ----------------------------------------------------
+
+	const handleHit = ({
+		other,
+	}) => {
+		const {
+			phase,
+			addExplosion,
+			loseLife,
+		} =
+			useGameStore.getState();
 
 
 		if (
-			phase !== "playing"
+			phase !==
+			"playing"
 		) {
 			return;
 		}
 
 
-		// --------------------------------------------------
-		// Update weapon cooldown
-		// --------------------------------------------------
-
-		fireCooldown.current -=
-			delta;
-
-
-		// --------------------------------------------------
-		// Horizontal input
-		// --------------------------------------------------
-
-		let horizontal = 0;
+		const enemyData =
+			other.rigidBody
+				?.userData;
 
 
 		if (
-			keys.KeyA ||
-			keys.ArrowLeft
+			enemyData?.type !==
+			"enemy"
 		) {
-			horizontal -= 1;
+			return;
 		}
 
 
+		const now =
+			performance.now() /
+			1000;
+
+
+		// Ignore damage during the
+		// invulnerability window.
 		if (
-			keys.KeyD ||
-			keys.ArrowRight
+			now <
+			invulnState.until
 		) {
-			horizontal += 1;
+			return;
 		}
 
 
-		// --------------------------------------------------
-		// Vertical input
-		// --------------------------------------------------
+		addExplosion({
+			x: playerState.x,
 
-		let vertical = 0;
+			y: playerState.y,
 
-
-		if (
-			keys.KeyW ||
-			keys.ArrowUp
-		) {
-			vertical += 1;
-		}
+			z: 0,
+		});
 
 
-		if (
-			keys.KeyS ||
-			keys.ArrowDown
-		) {
-			vertical -= 1;
-		}
+		loseLife();
+	};
 
 
-		// --------------------------------------------------
-		// Normalize diagonal movement
-		// --------------------------------------------------
+	// ----------------------------------------------------
+	// Frame loop
+	// ----------------------------------------------------
 
-		if (
-			horizontal !== 0 &&
-			vertical !== 0
-		) {
-			const diagonalFactor =
-				Math.SQRT1_2;
-
-
-			horizontal *=
-				diagonalFactor;
-
-			vertical *=
-				diagonalFactor;
-		}
+	useFrame(
+		(
+			_,
+			delta
+		) => {
+			const phase =
+				useGameStore
+					.getState()
+					.phase;
 
 
-		// --------------------------------------------------
-		// Update player position
-		// --------------------------------------------------
-
-		playerState.x +=
-			horizontal *
-			MOVE_SPEED *
-			delta;
+			if (
+				phase !==
+				"playing"
+			) {
+				return;
+			}
 
 
-		playerState.y +=
-			vertical *
-			MOVE_SPEED *
-			delta;
-
-
-		// --------------------------------------------------
-		// Keep player inside playable area
-		// --------------------------------------------------
-
-		playerState.x =
-			THREE.MathUtils.clamp(
-				playerState.x,
-				MIN_X,
-				MAX_X
-			);
-
-
-		playerState.y =
-			THREE.MathUtils.clamp(
-				playerState.y,
-				MIN_Y,
-				MAX_Y
-			);
-
-
-		// --------------------------------------------------
-		// Apply position and flight animation
-		// --------------------------------------------------
-
-		if (shipRef.current) {
-			shipRef.current.position.x =
-				playerState.x;
-
-
-			shipRef.current.position.y =
-				playerState.y;
+			fireCooldown.current -=
+				delta;
 
 
 			// ------------------------------------------------
-			// Banking
+			// Horizontal input
 			// ------------------------------------------------
 
-			const targetBank =
-				-horizontal *
-				MAX_BANK;
+			let horizontal = 0;
 
 
-			shipRef.current.rotation.z =
-				THREE.MathUtils.damp(
-					shipRef.current.rotation.z,
-					targetBank,
-					6,
-					delta
+			if (
+				keys.KeyA ||
+				keys.ArrowLeft
+			) {
+				horizontal -= 1;
+			}
+
+
+			if (
+				keys.KeyD ||
+				keys.ArrowRight
+			) {
+				horizontal += 1;
+			}
+
+
+			// ------------------------------------------------
+			// Vertical input
+			// ------------------------------------------------
+
+			let vertical = 0;
+
+
+			if (
+				keys.KeyW ||
+				keys.ArrowUp
+			) {
+				vertical += 1;
+			}
+
+
+			if (
+				keys.KeyS ||
+				keys.ArrowDown
+			) {
+				vertical -= 1;
+			}
+
+
+			// ------------------------------------------------
+			// Normalize diagonal movement
+			// ------------------------------------------------
+
+			if (
+				horizontal !== 0 &&
+				vertical !== 0
+			) {
+				const diagonalFactor =
+					Math.SQRT1_2;
+
+
+				horizontal *=
+					diagonalFactor;
+
+				vertical *=
+					diagonalFactor;
+			}
+
+
+			// ------------------------------------------------
+			// Update player position
+			// ------------------------------------------------
+
+			playerState.x +=
+				horizontal *
+				MOVE_SPEED *
+				delta;
+
+
+			playerState.y +=
+				vertical *
+				MOVE_SPEED *
+				delta;
+
+
+			playerState.x =
+				THREE.MathUtils.clamp(
+					playerState.x,
+					MIN_X,
+					MAX_X
+				);
+
+
+			playerState.y =
+				THREE.MathUtils.clamp(
+					playerState.y,
+					MIN_Y,
+					MAX_Y
 				);
 
 
 			// ------------------------------------------------
-			// Pitch
+			// Move Rapier player body
 			// ------------------------------------------------
 
-			const targetPitch =
-				-vertical *
-				MAX_PITCH;
+			if (
+				bodyRef.current
+			) {
+				bodyRef.current
+					.setNextKinematicTranslation({
+						x:
+							playerState.x,
+
+						y:
+							playerState.y,
+
+						z: 0,
+					});
+			}
 
 
-			shipRef.current.rotation.x =
-				THREE.MathUtils.damp(
-					shipRef.current.rotation.x,
-					targetPitch,
-					6,
-					delta
-				);
+			// ------------------------------------------------
+			// Banking / pitching / invulnerability flash
+			// ------------------------------------------------
+
+			if (
+				visualRef.current
+			) {
+				const targetBank =
+					-horizontal *
+					MAX_BANK;
+
+
+				visualRef.current.rotation.z =
+					THREE.MathUtils.damp(
+						visualRef.current
+							.rotation.z,
+
+						targetBank,
+
+						6,
+
+						delta
+					);
+
+
+				const targetPitch =
+					-vertical *
+					MAX_PITCH;
+
+
+				visualRef.current.rotation.x =
+					THREE.MathUtils.damp(
+						visualRef.current
+							.rotation.x,
+
+						targetPitch,
+
+						6,
+
+						delta
+					);
+
+
+				// --------------------------------------------
+				// Flash while invulnerable
+				// --------------------------------------------
+
+				const now =
+					performance.now() /
+					1000;
+
+
+				const isInvulnerable =
+					now <
+					invulnState.until;
+
+
+				visualRef.current.visible =
+					!isInvulnerable ||
+					Math.sin(
+						now * 40
+					) >
+					0;
+			}
+
+
+			// ------------------------------------------------
+			// Fire weapon
+			// ------------------------------------------------
+
+			if (
+				keys.Space &&
+				fireCooldown.current <=
+				0
+			) {
+				fireCooldown.current =
+					FIRE_INTERVAL;
+
+
+				useGameStore
+					.getState()
+					.spawnProjectile({
+						x:
+							playerState.x,
+
+						y:
+							playerState.y,
+
+						z:
+							PROJECTILE_START_Z,
+					});
+			}
 		}
-
-
-		// --------------------------------------------------
-		// Fire weapon
-		// --------------------------------------------------
-
-		if (
-			keys.Space &&
-			fireCooldown.current <= 0
-		) {
-			fireCooldown.current =
-				FIRE_INTERVAL;
-
-
-			useGameStore
-				.getState()
-				.spawnProjectile({
-					x: playerState.x,
-					y: playerState.y,
-					z: PROJECTILE_START_Z,
-				});
-		}
-	});
+	);
 
 
 	return (
-		<group
-			ref={shipRef}
+		<RigidBody
+			ref={bodyRef}
+
+			type="kinematicPosition"
+
+			colliders={false}
+
 			position={[
 				playerState.x,
 				playerState.y,
 				0,
 			]}
+
+			userData={{
+				type:
+					"player",
+			}}
 		>
-			<ShipModel />
-		</group>
+			{/* -------------------------------------------- */}
+			{/* Player collision sensor */}
+			{/* -------------------------------------------- */}
+
+			<CuboidCollider
+				args={
+					PLAYER_COLLIDER
+				}
+
+				sensor
+
+				collisionGroups={
+					interactionGroups(
+						0,
+						[
+							2,
+						]
+					)
+				}
+
+				onIntersectionEnter={
+					handleHit
+				}
+			/>
+
+
+			{/* -------------------------------------------- */}
+			{/* Visible spaceship */}
+			{/* -------------------------------------------- */}
+
+			<group
+				ref={
+					visualRef
+				}
+			>
+				<ShipModel />
+			</group>
+		</RigidBody>
 	);
 }

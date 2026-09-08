@@ -24,6 +24,28 @@ export const playerState = {
 
 
 // ------------------------------------------------------
+// Mutable invulnerability state
+// ------------------------------------------------------
+//
+// Stored as an absolute performance.now() timestamp.
+//
+// Example:
+//
+// invulnState.until = 120.5
+//
+// means the player remains invulnerable until
+// performance.now() / 1000 reaches 120.5.
+// ------------------------------------------------------
+
+export const invulnState = {
+	until: 0,
+};
+
+
+const INVULNERABILITY_DURATION = 2;
+
+
+// ------------------------------------------------------
 // Main game store
 // ------------------------------------------------------
 
@@ -50,6 +72,8 @@ export const useGameStore = create((set) => ({
 	startGame: () => {
 		playerState.x = 0;
 		playerState.y = 5;
+
+		invulnState.until = 0;
 
 
 		set({
@@ -104,13 +128,38 @@ export const useGameStore = create((set) => ({
 				);
 
 
-			return {
-				lives: nextLives,
+			// ----------------------------------------------
+			// No lives left
+			// ----------------------------------------------
 
-				phase:
-					nextLives === 0
-						? "gameover"
-						: state.phase,
+			if (
+				nextLives === 0
+			) {
+				invulnState.until = 0;
+
+
+				return {
+					lives: 0,
+
+					phase:
+						"gameover",
+				};
+			}
+
+
+			// ----------------------------------------------
+			// Survived the hit
+			// ----------------------------------------------
+
+			invulnState.until =
+				performance.now() /
+				1000 +
+				INVULNERABILITY_DURATION;
+
+
+			return {
+				lives:
+					nextLives,
 			};
 		});
 	},
