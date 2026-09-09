@@ -13,6 +13,7 @@ import {
 } from "@react-three/rapier";
 
 import {
+	genId,
 	useGameStore,
 } from "./gameStore";
 
@@ -22,6 +23,41 @@ const PROJECTILE_SPEED =
 
 const PROJECTILE_LIMIT =
 	-210;
+
+
+const POWER_UP_DROP_CHANCE =
+	0.16;
+
+
+const POWER_UP_TYPES = [
+	"rapid",
+	"speed",
+	"shield",
+];
+
+
+// ------------------------------------------------------
+// Deterministic pseudo-random
+// ------------------------------------------------------
+
+function pseudoRandom(
+	seed
+) {
+	const value =
+		Math.sin(
+			seed *
+			12.9898
+		) *
+		43758.5453;
+
+
+	return (
+		value -
+		Math.floor(
+			value
+		)
+	);
+}
 
 
 export default function Projectile({
@@ -86,7 +122,7 @@ export default function Projectile({
 
 
 	// ----------------------------------------------------
-	// Projectile → enemy
+	// Projectile → enemy collision
 	// ----------------------------------------------------
 
 	const handleHit = ({
@@ -121,6 +157,7 @@ export default function Projectile({
 			removeEnemy,
 			removeProjectile,
 			addScore,
+			spawnPowerUp,
 		} =
 			useGameStore.getState();
 
@@ -158,10 +195,18 @@ export default function Projectile({
 		}
 
 
+		// --------------------------------------------------
+		// Explosion
+		// --------------------------------------------------
+
 		addExplosion(
 			hitPosition
 		);
 
+
+		// --------------------------------------------------
+		// Remove enemy + laser
+		// --------------------------------------------------
 
 		removeEnemy(
 			enemyData.id
@@ -173,9 +218,52 @@ export default function Projectile({
 		);
 
 
+		// --------------------------------------------------
+		// Score
+		// --------------------------------------------------
+
 		addScore(
 			100
 		);
+
+
+		// --------------------------------------------------
+		// Chance to drop power-up
+		// --------------------------------------------------
+
+		const dropRoll =
+			pseudoRandom(
+				enemyData.id
+			);
+
+
+		if (
+			dropRoll <
+			POWER_UP_DROP_CHANCE
+		) {
+			const typeIndex =
+				Math.floor(
+					pseudoRandom(
+						enemyData.id +
+						1000
+					) *
+					POWER_UP_TYPES.length
+				);
+
+
+			spawnPowerUp({
+				id:
+					genId(),
+
+				type:
+					POWER_UP_TYPES[
+					typeIndex
+					],
+
+				position:
+					hitPosition,
+			});
+		}
 	};
 
 
@@ -230,6 +318,7 @@ export default function Projectile({
 						2.6,
 					]}
 				/>
+
 
 				<meshBasicMaterial
 					color="#9dfdff"

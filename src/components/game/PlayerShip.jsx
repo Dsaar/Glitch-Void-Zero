@@ -21,6 +21,7 @@ import {
 import {
 	invulnState,
 	playerState,
+	powerUpState,
 	useGameStore,
 } from "./gameStore";
 
@@ -31,7 +32,9 @@ import ShipModel from "./ShipModel";
 // Movement
 // ------------------------------------------------------
 
-const MOVE_SPEED = 10;
+const BASE_MOVE_SPEED = 10;
+
+const SPEED_MULTIPLIER = 1.55;
 
 const MIN_X = -12;
 const MAX_X = 12;
@@ -59,8 +62,11 @@ const MAX_PITCH =
 // Weapon
 // ------------------------------------------------------
 
-const FIRE_INTERVAL =
+const NORMAL_FIRE_INTERVAL =
 	0.18;
+
+const RAPID_FIRE_INTERVAL =
+	0.07;
 
 const PROJECTILE_START_Z =
 	-2.5;
@@ -68,14 +74,6 @@ const PROJECTILE_START_Z =
 
 // ------------------------------------------------------
 // Player collider
-// ------------------------------------------------------
-//
-// Rapier uses half-extents for CuboidCollider.
-//
-// Therefore:
-// x = 1.1 means total width 2.2
-// y = 0.5 means total height 1.0
-// z = 1.5 means total length 3.0
 // ------------------------------------------------------
 
 const PLAYER_COLLIDER = [
@@ -90,6 +88,9 @@ export default function PlayerShip() {
 		useRef();
 
 	const visualRef =
+		useRef();
+
+	const shieldRef =
 		useRef();
 
 	const fireCooldown =
@@ -112,8 +113,7 @@ export default function PlayerShip() {
 
 
 		if (
-			phase !==
-			"playing"
+			phase !== "playing"
 		) {
 			return;
 		}
@@ -137,8 +137,10 @@ export default function PlayerShip() {
 			1000;
 
 
-		// Ignore damage during the
-		// invulnerability window.
+		// --------------------------------------------------
+		// Ignore collisions while temporarily invulnerable
+		// --------------------------------------------------
+
 		if (
 			now <
 			invulnState.until
@@ -146,6 +148,34 @@ export default function PlayerShip() {
 			return;
 		}
 
+
+		// --------------------------------------------------
+		// Shield absorbs one hit
+		// --------------------------------------------------
+
+		if (
+			powerUpState.shieldActive
+		) {
+			powerUpState.shieldActive =
+				false;
+
+
+			addExplosion({
+				x: playerState.x,
+
+				y: playerState.y,
+
+				z: 0,
+			});
+
+
+			return;
+		}
+
+
+		// --------------------------------------------------
+		// Normal damage
+		// --------------------------------------------------
 
 		addExplosion({
 			x: playerState.x,
@@ -176,15 +206,48 @@ export default function PlayerShip() {
 
 
 			if (
-				phase !==
-				"playing"
+				phase !== "playing"
 			) {
 				return;
 			}
 
 
+			const now =
+				performance.now() /
+				1000;
+
+
 			fireCooldown.current -=
 				delta;
+
+
+			// ------------------------------------------------
+			// Power-up state
+			// ------------------------------------------------
+
+			const speedActive =
+				now <
+				powerUpState.speedUntil;
+
+
+			const rapidFireActive =
+				now <
+				powerUpState.rapidFireUntil;
+
+
+			const moveSpeed =
+				BASE_MOVE_SPEED *
+				(
+					speedActive
+						? SPEED_MULTIPLIER
+						: 1
+				);
+
+
+			const fireInterval =
+				rapidFireActive
+					? RAPID_FIRE_INTERVAL
+					: NORMAL_FIRE_INTERVAL;
 
 
 			// ------------------------------------------------
@@ -254,18 +317,18 @@ export default function PlayerShip() {
 
 
 			// ------------------------------------------------
-			// Update player position
+			// Update position
 			// ------------------------------------------------
 
 			playerState.x +=
 				horizontal *
-				MOVE_SPEED *
+				moveSpeed *
 				delta;
 
 
 			playerState.y +=
 				vertical *
-				MOVE_SPEED *
+				moveSpeed *
 				delta;
 
 
@@ -286,7 +349,7 @@ export default function PlayerShip() {
 
 
 			// ------------------------------------------------
-			// Move Rapier player body
+			// Move Rapier body
 			// ------------------------------------------------
 
 			if (
@@ -306,7 +369,7 @@ export default function PlayerShip() {
 
 
 			// ------------------------------------------------
-			// Banking / pitching / invulnerability flash
+			// Banking / pitching / invulnerability flashing
 			// ------------------------------------------------
 
 			if (
@@ -348,15 +411,6 @@ export default function PlayerShip() {
 					);
 
 
-				// --------------------------------------------
-				// Flash while invulnerable
-				// --------------------------------------------
-
-				const now =
-					performance.now() /
-					1000;
-
-
 				const isInvulnerable =
 					now <
 					invulnState.until;
@@ -366,8 +420,27 @@ export default function PlayerShip() {
 					!isInvulnerable ||
 					Math.sin(
 						now * 40
-					) >
-					0;
+					) > 0;
+			}
+
+
+			// ------------------------------------------------
+			// Shield visual
+			// ------------------------------------------------
+
+			if (
+				shieldRef.current
+			) {
+				shieldRef.current.visible =
+					powerUpState.shieldActive;
+
+
+				shieldRef.current.rotation.y +=
+					delta * 1.5;
+
+
+				shieldRef.current.rotation.x +=
+					delta * 0.6;
 			}
 
 
@@ -377,11 +450,10 @@ export default function PlayerShip() {
 
 			if (
 				keys.Space &&
-				fireCooldown.current <=
-				0
+				fireCooldown.current <= 0
 			) {
 				fireCooldown.current =
-					FIRE_INTERVAL;
+					fireInterval;
 
 
 				useGameStore
@@ -421,7 +493,7 @@ export default function PlayerShip() {
 			}}
 		>
 			{/* -------------------------------------------- */}
-			{/* Player collision sensor */}
+			{/* Player collider */}
 			{/* -------------------------------------------- */}
 
 			<CuboidCollider
@@ -436,6 +508,7 @@ export default function PlayerShip() {
 						0,
 						[
 							2,
+							3,
 						]
 					)
 				}
@@ -447,7 +520,7 @@ export default function PlayerShip() {
 
 
 			{/* -------------------------------------------- */}
-			{/* Visible spaceship */}
+			{/* Visible ship */}
 			{/* -------------------------------------------- */}
 
 			<group
@@ -456,6 +529,46 @@ export default function PlayerShip() {
 				}
 			>
 				<ShipModel />
+
+
+				{/* ------------------------------------------ */}
+				{/* Shield */}
+				{/* ------------------------------------------ */}
+
+				<mesh
+					ref={
+						shieldRef
+					}
+
+					visible={
+						false
+					}
+				>
+					<sphereGeometry
+						args={[
+							2.25,
+							24,
+							16,
+						]}
+					/>
+
+
+					<meshBasicMaterial
+						color="#00e5ff"
+
+						wireframe
+
+						transparent
+
+						opacity={
+							0.28
+						}
+
+						depthWrite={
+							false
+						}
+					/>
+				</mesh>
 			</group>
 		</RigidBody>
 	);

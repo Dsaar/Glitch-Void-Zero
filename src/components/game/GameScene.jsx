@@ -16,6 +16,8 @@ import Explosion from "./Explosion";
 
 import PlayerShip from "./PlayerShip";
 
+import PowerUp from "./PowerUp";
+
 import Projectile from "./Projectile";
 
 import {
@@ -45,6 +47,13 @@ export default function GameScene() {
 		);
 
 
+	const powerUps =
+		useGameStore(
+			(state) =>
+				state.powerUps
+		);
+
+
 	const explosions =
 		useGameStore(
 			(state) =>
@@ -54,7 +63,9 @@ export default function GameScene() {
 
 	return (
 		<Suspense
-			fallback={null}
+			fallback={
+				null
+			}
 		>
 			<Physics
 				gravity={[
@@ -67,11 +78,19 @@ export default function GameScene() {
 					false
 				}
 			>
+				{/* ------------------------------------------ */}
+				{/* Player */}
+				{/* ------------------------------------------ */}
+
 				{phase ===
 					"playing" && (
 						<PlayerShip />
 					)}
 
+
+				{/* ------------------------------------------ */}
+				{/* Targeting */}
+				{/* ------------------------------------------ */}
 
 				{phase ===
 					"playing" && (
@@ -79,8 +98,16 @@ export default function GameScene() {
 					)}
 
 
+				{/* ------------------------------------------ */}
+				{/* Enemy spawning */}
+				{/* ------------------------------------------ */}
+
 				<EnemySpawner />
 
+
+				{/* ------------------------------------------ */}
+				{/* Projectiles */}
+				{/* ------------------------------------------ */}
 
 				{projectiles.map(
 					(
@@ -97,6 +124,10 @@ export default function GameScene() {
 				)}
 
 
+				{/* ------------------------------------------ */}
+				{/* Enemies */}
+				{/* ------------------------------------------ */}
+
 				{enemies.map(
 					(
 						enemy
@@ -111,6 +142,29 @@ export default function GameScene() {
 					)
 				)}
 
+
+				{/* ------------------------------------------ */}
+				{/* Power-ups */}
+				{/* ------------------------------------------ */}
+
+				{powerUps.map(
+					(
+						powerUp
+					) => (
+						<PowerUp
+							key={
+								powerUp.id
+							}
+
+							{...powerUp}
+						/>
+					)
+				)}
+
+
+				{/* ------------------------------------------ */}
+				{/* Explosions */}
+				{/* ------------------------------------------ */}
 
 				{explosions.map(
 					(

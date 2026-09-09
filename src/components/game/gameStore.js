@@ -26,19 +26,22 @@ export const playerState = {
 // ------------------------------------------------------
 // Mutable invulnerability state
 // ------------------------------------------------------
-//
-// Stored as an absolute performance.now() timestamp.
-//
-// Example:
-//
-// invulnState.until = 120.5
-//
-// means the player remains invulnerable until
-// performance.now() / 1000 reaches 120.5.
-// ------------------------------------------------------
 
 export const invulnState = {
 	until: 0,
+};
+
+
+// ------------------------------------------------------
+// Mutable power-up state
+// ------------------------------------------------------
+
+export const powerUpState = {
+	rapidFireUntil: 0,
+
+	speedUntil: 0,
+
+	shieldActive: false,
 };
 
 
@@ -64,6 +67,8 @@ export const useGameStore = create((set) => ({
 
 	explosions: [],
 
+	powerUps: [],
+
 
 	// ----------------------------------------------------
 	// Game state
@@ -73,7 +78,15 @@ export const useGameStore = create((set) => ({
 		playerState.x = 0;
 		playerState.y = 5;
 
+
 		invulnState.until = 0;
+
+
+		powerUpState.rapidFireUntil = 0;
+
+		powerUpState.speedUntil = 0;
+
+		powerUpState.shieldActive = false;
 
 
 		set({
@@ -91,6 +104,8 @@ export const useGameStore = create((set) => ({
 			enemies: [],
 
 			explosions: [],
+
+			powerUps: [],
 		});
 	},
 
@@ -128,10 +143,6 @@ export const useGameStore = create((set) => ({
 				);
 
 
-			// ----------------------------------------------
-			// No lives left
-			// ----------------------------------------------
-
 			if (
 				nextLives === 0
 			) {
@@ -146,10 +157,6 @@ export const useGameStore = create((set) => ({
 				};
 			}
 
-
-			// ----------------------------------------------
-			// Survived the hit
-			// ----------------------------------------------
 
 			invulnState.until =
 				performance.now() /
@@ -259,5 +266,68 @@ export const useGameStore = create((set) => ({
 						explosion.id !== id
 				),
 		}));
+	},
+
+
+	// ----------------------------------------------------
+	// Power-ups
+	// ----------------------------------------------------
+
+	spawnPowerUp: (
+		powerUp
+	) => {
+		set((state) => ({
+			powerUps: [
+				...state.powerUps,
+
+				powerUp,
+			],
+		}));
+	},
+
+
+	removePowerUp: (
+		id
+	) => {
+		set((state) => ({
+			powerUps:
+				state.powerUps.filter(
+					(powerUp) =>
+						powerUp.id !== id
+				),
+		}));
+	},
+
+
+	activatePowerUp: (
+		type
+	) => {
+		const now =
+			performance.now() /
+			1000;
+
+
+		if (
+			type === "rapid"
+		) {
+			powerUpState.rapidFireUntil =
+				now + 10;
+		}
+
+
+		if (
+			type === "speed"
+		) {
+			powerUpState.speedUntil =
+				now + 10;
+		}
+
+
+		if (
+			type === "shield"
+		) {
+			powerUpState.shieldActive =
+				true;
+		}
 	},
 }));
