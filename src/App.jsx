@@ -15,6 +15,7 @@ import {
 import GlitchTerrain from "./components/glitch/GlitchTerrain";
 
 import NeonStarfield from "./components/glitch/NeonStarfield";
+import Effects from "./components/glitch/Effects";
 
 
 function App() {
@@ -131,6 +132,7 @@ function App() {
         {/* ------------------------------------------ */}
 
         <GameScene />
+        <Effects/>
       </Canvas>
     </>
   );

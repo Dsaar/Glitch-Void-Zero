@@ -559,6 +559,9 @@ canvas {
 
   gap: 12px;
 
+  padding:
+    7px 12px;
+
   transform:
     translateX(-50%);
 
@@ -566,12 +569,33 @@ canvas {
     rgba(255,
       255,
       255,
-      0.34);
+      0.72);
+
+  background:
+    rgba(3,
+      3,
+      4,
+      0.42);
+
+  border:
+    1px solid rgba(0,
+      229,
+      255,
+      0.12);
+
+  backdrop-filter:
+    blur(3px);
 
   font-size: 9px;
 
   letter-spacing:
     0.13em;
+
+  text-shadow:
+    0 0 6px rgba(0,
+      0,
+      0,
+      0.9);
 
   white-space: nowrap;
 }
