@@ -7,27 +7,40 @@ body,
 #root {
   width: 100%;
   height: 100%;
+
   margin: 0;
   padding: 0;
 }
 
+
 body {
   overflow: hidden;
+
+  overscroll-behavior: none;
+
+  touch-action: none;
+
   background: #030304;
+
   color: #ffffff;
+
   font-family:
     "Courier New",
     Courier,
     monospace;
 }
 
+
 button,
 input {
   font: inherit;
 }
 
+
 canvas {
   display: block;
+
+  touch-action: none;
 }
 
 
@@ -37,7 +50,9 @@ canvas {
 
 .game-ui {
   position: fixed;
+
   inset: 0;
+
   z-index: 100;
 
   pointer-events: none;
@@ -50,10 +65,12 @@ canvas {
 
 .screen-panel {
   position: absolute;
+
   top: 50%;
   left: 50%;
 
-  width: min(560px,
+  width:
+    min(560px,
       calc(100vw - 40px));
 
   transform:
@@ -258,17 +275,14 @@ canvas {
   grid-template-columns:
     auto auto;
 
-  justify-content:
-    center;
+  justify-content: center;
 
   gap:
     8px 22px;
 
-  margin-top:
-    35px;
+  margin-top: 35px;
 
-  font-size:
-    10px;
+  font-size: 10px;
 
   letter-spacing:
     0.12em;
@@ -322,8 +336,7 @@ canvas {
       255,
       0.45);
 
-  font-size:
-    10px;
+  font-size: 10px;
 
   letter-spacing:
     0.25em;
@@ -369,8 +382,7 @@ canvas {
 .hud-label {
   display: block;
 
-  margin-bottom:
-    5px;
+  margin-bottom: 5px;
 
   color:
     rgba(255,
@@ -378,8 +390,7 @@ canvas {
       255,
       0.45);
 
-  font-size:
-    9px;
+  font-size: 9px;
 
   letter-spacing:
     0.22em;
@@ -389,8 +400,7 @@ canvas {
 .score-value {
   color: #00e5ff;
 
-  font-size:
-    28px;
+  font-size: 28px;
 
   letter-spacing:
     0.08em;
@@ -546,7 +556,7 @@ canvas {
 
 
 /* ======================================================
-   Control hint
+   Desktop control hint
    ====================================================== */
 
 .controls-hint {
@@ -611,6 +621,253 @@ canvas {
 
 
 /* ======================================================
+   Touch controls
+   ====================================================== */
+
+.touch-controls {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  touch-action: none;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+}
+
+
+.touch-controls__left,
+.touch-controls__right {
+  position: absolute;
+
+  bottom:
+    max(26px,
+      env(safe-area-inset-bottom));
+
+  pointer-events: auto;
+}
+
+
+.touch-controls__left {
+  left:
+    max(24px,
+      env(safe-area-inset-left));
+}
+
+
+.touch-controls__right {
+  right:
+    max(28px,
+      env(safe-area-inset-right));
+}
+
+
+/* ======================================================
+   Virtual joystick
+   ====================================================== */
+
+.virtual-joystick {
+  position: relative;
+
+  width: 120px;
+  height: 120px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  touch-action: none;
+}
+
+
+.virtual-joystick__ring {
+  position: absolute;
+
+  inset: 8px;
+
+  border:
+    1px solid rgba(0,
+      229,
+      255,
+      0.45);
+
+  border-radius: 50%;
+
+  background:
+    rgba(0,
+      12,
+      20,
+      0.2);
+
+  box-shadow:
+    inset 0 0 24px rgba(0,
+      229,
+      255,
+      0.08);
+}
+
+
+.virtual-joystick__ring::before,
+.virtual-joystick__ring::after {
+  content: "";
+
+  position: absolute;
+
+  background:
+    rgba(0,
+      229,
+      255,
+      0.18);
+}
+
+
+.virtual-joystick__ring::before {
+  top: 50%;
+
+  left: 12px;
+  right: 12px;
+
+  height: 1px;
+}
+
+
+.virtual-joystick__ring::after {
+  top: 12px;
+  bottom: 12px;
+
+  left: 50%;
+
+  width: 1px;
+}
+
+
+.virtual-joystick__knob {
+  position: relative;
+
+  width: 46px;
+  height: 46px;
+
+  border:
+    1px solid #00e5ff;
+
+  border-radius: 50%;
+
+  background:
+    rgba(0,
+      229,
+      255,
+      0.16);
+
+  box-shadow:
+    0 0 18px rgba(0,
+      229,
+      255,
+      0.35);
+
+  pointer-events: none;
+
+  will-change:
+    transform;
+}
+
+
+/* ======================================================
+   Fire button
+   ====================================================== */
+
+.fire-button {
+  width: 94px;
+  height: 94px;
+
+  padding: 0;
+
+  border:
+    1px solid rgba(255,
+      45,
+      138,
+      0.8);
+
+  border-radius: 50%;
+
+  color: #ff2d8a;
+
+  background:
+    rgba(30,
+      0,
+      12,
+      0.3);
+
+  box-shadow:
+    0 0 22px rgba(255,
+      45,
+      138,
+      0.16);
+
+  cursor: pointer;
+
+  touch-action: none;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+.fire-button__inner {
+  display: flex;
+
+  width: 70px;
+  height: 70px;
+
+  margin: auto;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border:
+    1px solid rgba(255,
+      45,
+      138,
+      0.45);
+
+  border-radius: 50%;
+
+  font-size: 11px;
+
+  letter-spacing:
+    0.12em;
+}
+
+
+.fire-button:active {
+  color: #ffffff;
+
+  background:
+    rgba(255,
+      45,
+      138,
+      0.32);
+
+  box-shadow:
+    0 0 34px rgba(255,
+      45,
+      138,
+      0.55);
+}
+
+
+/* ======================================================
    Small screens
    ====================================================== */
 
@@ -642,5 +899,62 @@ canvas {
     bottom: 14px;
 
     font-size: 8px;
+  }
+
+
+  .game-title {
+    font-size:
+      clamp(58px,
+        18vw,
+        90px);
+  }
+
+
+  .game-subtitle {
+    font-size: 11px;
+  }
+}
+
+
+/* ======================================================
+   Smaller phones
+   ====================================================== */
+
+@media (max-width: 430px) {
+  .virtual-joystick {
+    width: 108px;
+    height: 108px;
+  }
+
+
+  .virtual-joystick__knob {
+    width: 42px;
+    height: 42px;
+  }
+
+
+  .fire-button {
+    width: 86px;
+    height: 86px;
+  }
+
+
+  .fire-button__inner {
+    width: 64px;
+    height: 64px;
+  }
+
+
+  .touch-controls__left {
+    left:
+      max(14px,
+        env(safe-area-inset-left));
+  }
+
+
+  .touch-controls__right {
+    right:
+      max(16px,
+        env(safe-area-inset-right));
   }
 }

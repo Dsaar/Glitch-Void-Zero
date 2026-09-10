@@ -2,9 +2,13 @@ import LivesCounter from "./LivesCounter";
 
 import PowerUpHUD from "./PowerUpHUD";
 
+import TouchControls from "./TouchControls";
+
 import {
 	useGameStore,
 } from "./gameStore";
+
+import useTouchDevice from "./useTouchDevice";
 
 
 export default function GameUI() {
@@ -36,6 +40,10 @@ export default function GameUI() {
 		);
 
 
+	const isTouchDevice =
+		useTouchDevice();
+
+
 	return (
 		<div className="game-ui">
 			{/* -------------------------------------------- */}
@@ -46,10 +54,15 @@ export default function GameUI() {
 				"playing" && (
 					<>
 						<div className="hud-top">
+							{/* -------------------------------------- */}
+							{/* Score */}
+							{/* -------------------------------------- */}
+
 							<div className="score-display">
 								<span className="hud-label">
 									SCORE
 								</span>
+
 
 								<span className="score-value">
 									{score
@@ -62,6 +75,10 @@ export default function GameUI() {
 							</div>
 
 
+							{/* -------------------------------------- */}
+							{/* Lives */}
+							{/* -------------------------------------- */}
+
 							<LivesCounter
 								lives={
 									lives
@@ -70,22 +87,43 @@ export default function GameUI() {
 						</div>
 
 
+						{/* ---------------------------------------- */}
+						{/* Power-up indicators */}
+						{/* ---------------------------------------- */}
+
 						<PowerUpHUD />
 
 
-						<div className="controls-hint">
-							<span>
-								WASD / ARROWS
-							</span>
+						{/* ---------------------------------------- */}
+						{/* Desktop control hint */}
+						{/* ---------------------------------------- */}
 
-							<span className="controls-divider">
-              //
-							</span>
+						{!isTouchDevice && (
+							<div className="controls-hint">
+								<span>
+									WASD / ARROWS
+								</span>
 
-							<span>
-								SPACE TO FIRE
-							</span>
-						</div>
+
+								<span className="controls-divider">
+                //
+								</span>
+
+
+								<span>
+									SPACE TO FIRE
+								</span>
+							</div>
+						)}
+
+
+						{/* ---------------------------------------- */}
+						{/* Mobile controls */}
+						{/* ---------------------------------------- */}
+
+						{isTouchDevice && (
+							<TouchControls />
+						)}
 					</>
 				)}
 
@@ -118,7 +156,9 @@ export default function GameUI() {
 
 						<button
 							type="button"
+
 							className="game-button"
+
 							onClick={
 								startGame
 							}
@@ -132,16 +172,23 @@ export default function GameUI() {
 								MOVE
 							</span>
 
+
 							<strong>
-								WASD / ARROWS
+								{isTouchDevice
+									? "JOYSTICK"
+									: "WASD / ARROWS"}
 							</strong>
+
 
 							<span>
 								FIRE
 							</span>
 
+
 							<strong>
-								SPACE
+								{isTouchDevice
+									? "FIRE BUTTON"
+									: "SPACE"}
 							</strong>
 						</div>
 					</div>
@@ -172,6 +219,7 @@ export default function GameUI() {
 								FINAL SCORE
 							</span>
 
+
 							<strong>
 								{score
 									.toString()
@@ -185,7 +233,9 @@ export default function GameUI() {
 
 						<button
 							type="button"
+
 							className="game-button game-button--danger"
+
 							onClick={
 								startGame
 							}

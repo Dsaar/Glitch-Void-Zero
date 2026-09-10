@@ -19,6 +19,10 @@ import {
 } from "./useKeyboard";
 
 import {
+	touchState,
+} from "./touchState";
+
+import {
 	invulnState,
 	playerState,
 	powerUpState,
@@ -252,9 +256,13 @@ export default function PlayerShip() {
 
 			// ------------------------------------------------
 			// Horizontal input
+			//
+			// Touch input gives us an analog value between
+			// -1 and +1. Keyboard input is then added to it.
 			// ------------------------------------------------
 
-			let horizontal = 0;
+			let horizontal =
+				touchState.horizontal;
 
 
 			if (
@@ -277,7 +285,8 @@ export default function PlayerShip() {
 			// Vertical input
 			// ------------------------------------------------
 
-			let vertical = 0;
+			let vertical =
+				touchState.vertical;
 
 
 			if (
@@ -297,22 +306,30 @@ export default function PlayerShip() {
 
 
 			// ------------------------------------------------
-			// Normalize diagonal movement
+			// Normalize input
+			//
+			// This works for both:
+			//
+			// keyboard diagonal movement
+			// and
+			// analog joystick movement
 			// ------------------------------------------------
 
+			const inputLength =
+				Math.hypot(
+					horizontal,
+					vertical
+				);
+
+
 			if (
-				horizontal !== 0 &&
-				vertical !== 0
+				inputLength > 1
 			) {
-				const diagonalFactor =
-					Math.SQRT1_2;
+				horizontal /=
+					inputLength;
 
-
-				horizontal *=
-					diagonalFactor;
-
-				vertical *=
-					diagonalFactor;
+				vertical /=
+					inputLength;
 			}
 
 
@@ -446,10 +463,19 @@ export default function PlayerShip() {
 
 			// ------------------------------------------------
 			// Fire weapon
+			//
+			// Desktop:
+			// Space
+			//
+			// Touch:
+			// FIRE button
 			// ------------------------------------------------
 
 			if (
-				keys.Space &&
+				(
+					keys.Space ||
+					touchState.fire
+				) &&
 				fireCooldown.current <= 0
 			) {
 				fireCooldown.current =
