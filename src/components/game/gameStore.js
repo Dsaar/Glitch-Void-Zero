@@ -42,6 +42,10 @@ export const powerUpState = {
 	speedUntil: 0,
 
 	shieldActive: false,
+
+	lastCollectedType: null,
+
+	lastCollectedAt: 0,
 };
 
 
@@ -87,6 +91,10 @@ export const useGameStore = create((set) => ({
 		powerUpState.speedUntil = 0;
 
 		powerUpState.shieldActive = false;
+
+		powerUpState.lastCollectedType = null;
+
+		powerUpState.lastCollectedAt = 0;
 
 
 		set({
@@ -305,6 +313,12 @@ export const useGameStore = create((set) => ({
 		const now =
 			performance.now() /
 			1000;
+
+		powerUpState.lastCollectedType =
+			type;
+
+		powerUpState.lastCollectedAt =
+			now;
 
 
 		if (

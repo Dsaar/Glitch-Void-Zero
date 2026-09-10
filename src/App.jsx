@@ -6,6 +6,9 @@ import FlightRig from "./components/game/FlightRig";
 
 import GameScene from "./components/game/GameScene";
 
+import LoadingOverlay from "./components/glitch/LoadingOverlay";
+
+
 import GameUI from "./components/game/GameUI";
 
 import {
@@ -18,12 +21,15 @@ import NeonStarfield from "./components/glitch/NeonStarfield";
 import Effects from "./components/glitch/Effects";
 
 
+
 function App() {
   useKeyboard();
 
 
   return (
     <>
+    <LoadingOverlay/>
+
       <GameUI />
 
 

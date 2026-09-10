@@ -8,6 +8,17 @@ import {
 } from "./gameStore";
 
 
+const POWER_UP_NAMES = {
+	rapid: "RAPID FIRE",
+	speed: "BOOST",
+	shield: "SHIELD",
+};
+
+
+const POWER_UP_NOTICE_DURATION =
+	1.25;
+
+
 function getCurrentTime() {
 	return (
 		performance.now() /
@@ -46,6 +57,10 @@ export default function PowerUpHUD() {
 	}, []);
 
 
+	// ----------------------------------------------------
+	// Remaining duration for timed power-ups
+	// ----------------------------------------------------
+
 	const rapidRemaining =
 		Math.max(
 			0,
@@ -69,76 +84,148 @@ export default function PowerUpHUD() {
 			.shieldActive;
 
 
+	// ----------------------------------------------------
+	// Power-up collection notification
+	// ----------------------------------------------------
+
+	const collectionAge =
+		now -
+		powerUpState
+			.lastCollectedAt;
+
+
+	const showCollectionNotice =
+		Boolean(
+			powerUpState
+				.lastCollectedType
+		) &&
+		collectionAge >= 0 &&
+		collectionAge <
+		POWER_UP_NOTICE_DURATION;
+
+
+	// ----------------------------------------------------
+	// Whether persistent power-up HUD is needed
+	// ----------------------------------------------------
+
 	const hasPowerUp =
 		rapidRemaining > 0 ||
 		speedRemaining > 0 ||
 		shieldActive;
 
 
-	if (!hasPowerUp) {
-		return null;
-	}
-
-
 	return (
-		<div className="power-up-hud">
-			{rapidRemaining >
-				0 && (
-					<div className="power-up-status power-up-status--rapid">
-						<span className="power-up-icon">
-							R
-						</span>
+		<>
+			{/* -------------------------------------------- */}
+			{/* Collection notification */}
+			{/* -------------------------------------------- */}
 
-						<span>
-							RAPID FIRE
-						</span>
-
-						<span className="power-up-time">
-							{Math.ceil(
-								rapidRemaining
-							)}
-							s
-						</span>
-					</div>
-				)}
-
-
-			{speedRemaining >
-				0 && (
-					<div className="power-up-status power-up-status--speed">
-						<span className="power-up-icon">
-							S
-						</span>
-
-						<span>
-							BOOST
-						</span>
-
-						<span className="power-up-time">
-							{Math.ceil(
-								speedRemaining
-							)}
-							s
-						</span>
-					</div>
-				)}
-
-
-			{shieldActive && (
-				<div className="power-up-status power-up-status--shield">
-					<span className="power-up-icon">
-						O
-					</span>
-
+			{showCollectionNotice && (
+				<div
+					className={
+						`power-up-collected power-up-collected--${powerUpState.lastCollectedType}`
+					}
+				>
 					<span>
-						SHIELD
+						POWER-UP ACQUIRED
 					</span>
 
-					<span className="power-up-time">
-						READY
-					</span>
+
+					<strong>
+						{
+							POWER_UP_NAMES[
+							powerUpState
+								.lastCollectedType
+							]
+						}
+					</strong>
 				</div>
 			)}
-		</div>
+
+
+			{/* -------------------------------------------- */}
+			{/* Active power-up HUD */}
+			{/* -------------------------------------------- */}
+
+			{hasPowerUp && (
+				<div className="power-up-hud">
+					{/* ---------------------------------------- */}
+					{/* Rapid Fire */}
+					{/* ---------------------------------------- */}
+
+					{rapidRemaining >
+						0 && (
+							<div className="power-up-status power-up-status--rapid">
+								<span className="power-up-icon">
+									R
+								</span>
+
+
+								<span>
+									RAPID FIRE
+								</span>
+
+
+								<span className="power-up-time">
+									{Math.ceil(
+										rapidRemaining
+									)}
+									s
+								</span>
+							</div>
+						)}
+
+
+					{/* ---------------------------------------- */}
+					{/* Speed Boost */}
+					{/* ---------------------------------------- */}
+
+					{speedRemaining >
+						0 && (
+							<div className="power-up-status power-up-status--speed">
+								<span className="power-up-icon">
+									S
+								</span>
+
+
+								<span>
+									BOOST
+								</span>
+
+
+								<span className="power-up-time">
+									{Math.ceil(
+										speedRemaining
+									)}
+									s
+								</span>
+							</div>
+						)}
+
+
+					{/* ---------------------------------------- */}
+					{/* Shield */}
+					{/* ---------------------------------------- */}
+
+					{shieldActive && (
+						<div className="power-up-status power-up-status--shield">
+							<span className="power-up-icon">
+								O
+							</span>
+
+
+							<span>
+								SHIELD
+							</span>
+
+
+							<span className="power-up-time">
+								READY
+							</span>
+						</div>
+					)}
+				</div>
+			)}
+		</>
 	);
 }
