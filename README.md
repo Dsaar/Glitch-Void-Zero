@@ -135,6 +135,17 @@ Glitch-Void-Zero/
 └── vite.config.js
 ```
 
+## Third-Party Assets
+
+**Spaceship:** "Intergalactic Spaceship in Blender 2.8 Eevee"\
+Created by **Dennis Haupt (3DHaupt)**\
+Licensed under **Creative Commons Attribution-NonCommercial (CC BY-NC)**\
+Source: [BlendSwap](https://www.blendswap.com/blend/22854)
+
+Model file: `public/models/Intergalactic Spaceship_Blender_2.79b_BI.glb`.
+
+This is a personal, non-commercial project. The spaceship model is a third-party asset and is not original project content.
+
 ## Author
 
 Created by [Dsaar](https://github.com/Dsaar).
