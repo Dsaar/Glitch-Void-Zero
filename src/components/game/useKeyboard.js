@@ -1,21 +1,21 @@
-import { useEffect } from "react";
+import {
+	useEffect,
+} from "react";
 
-
-// ------------------------------------------------------
-// Mutable key-state map
-// ------------------------------------------------------
-//
-// Example:
-//
-// keys.KeyW === true
-// keys.ArrowLeft === true
-// keys.Space === true
-//
-// Three.js components can read this directly
-// inside useFrame().
-// ------------------------------------------------------
 
 export const keys = {};
+
+
+function isTypingTarget(
+	target
+) {
+	return (
+		target instanceof
+		HTMLInputElement ||
+		target instanceof
+		HTMLTextAreaElement
+	);
+}
 
 
 export function useKeyboard() {
@@ -23,11 +23,32 @@ export function useKeyboard() {
 		const handleKeyDown = (
 			event
 		) => {
-			keys[event.code] = true;
-
+			// ----------------------------------------------
+			// Ignore game controls while the player is
+			// typing into a form field, such as the
+			// leaderboard callsign input.
+			// ----------------------------------------------
 
 			if (
-				event.code === "Space" ||
+				isTypingTarget(
+					event.target
+				)
+			) {
+				return;
+			}
+
+
+			keys[event.code] =
+				true;
+
+
+			// ----------------------------------------------
+			// Prevent browser scrolling while playing.
+			// ----------------------------------------------
+
+			if (
+				event.code ===
+				"Space" ||
 				event.code.startsWith(
 					"Arrow"
 				)
@@ -40,16 +61,29 @@ export function useKeyboard() {
 		const handleKeyUp = (
 			event
 		) => {
-			keys[event.code] = false;
+			if (
+				isTypingTarget(
+					event.target
+				)
+			) {
+				return;
+			}
+
+
+			keys[event.code] =
+				false;
 		};
 
 
 		const handleBlur = () => {
 			Object.keys(
 				keys
-			).forEach((key) => {
-				keys[key] = false;
-			});
+			).forEach(
+				(key) => {
+					keys[key] =
+						false;
+				}
+			);
 		};
 
 
@@ -58,10 +92,12 @@ export function useKeyboard() {
 			handleKeyDown
 		);
 
+
 		window.addEventListener(
 			"keyup",
 			handleKeyUp
 		);
+
 
 		window.addEventListener(
 			"blur",
@@ -75,10 +111,12 @@ export function useKeyboard() {
 				handleKeyDown
 			);
 
+
 			window.removeEventListener(
 				"keyup",
 				handleKeyUp
 			);
+
 
 			window.removeEventListener(
 				"blur",

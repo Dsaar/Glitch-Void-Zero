@@ -1342,3 +1342,281 @@ canvas {
     top: 32%;
   }
 }
+
+/* ======================================================
+   Leaderboard
+   ====================================================== */
+
+.leaderboard {
+  width: min(330px,
+      100%);
+
+  margin:
+    28px auto 0;
+
+  padding:
+    14px 18px;
+
+  border:
+    1px solid rgba(0,
+      229,
+      255,
+      0.16);
+
+  background:
+    rgba(0,
+      8,
+      14,
+      0.4);
+
+  backdrop-filter:
+    blur(4px);
+}
+
+
+.leaderboard__heading {
+  margin-bottom:
+    12px;
+
+  color:
+    rgba(0,
+      229,
+      255,
+      0.8);
+
+  font-size:
+    9px;
+
+  letter-spacing:
+    0.25em;
+}
+
+
+.leaderboard__empty {
+  padding:
+    6px 0;
+
+  color:
+    rgba(255,
+      255,
+      255,
+      0.28);
+
+  font-size:
+    9px;
+
+  letter-spacing:
+    0.12em;
+}
+
+
+.leaderboard__entries {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.leaderboard__row {
+  display: grid;
+
+  grid-template-columns:
+    32px 1fr auto;
+
+  align-items: center;
+
+  font-size: 10px;
+
+  letter-spacing:
+    0.12em;
+}
+
+
+.leaderboard__rank {
+  color:
+    rgba(255,
+      255,
+      255,
+      0.3);
+
+  text-align: left;
+}
+
+
+.leaderboard__name {
+  color:
+    rgba(255,
+      255,
+      255,
+      0.78);
+
+  text-align: left;
+}
+
+
+.leaderboard__score {
+  color: #00e5ff;
+
+  text-align: right;
+}
+
+
+/* ======================================================
+   Score entry
+   ====================================================== */
+
+.score-entry {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 10px;
+
+  width:
+    min(280px,
+      100%);
+
+  margin:
+    0 auto 22px;
+}
+
+
+.score-entry__label {
+  color:
+    rgba(255,
+      255,
+      255,
+      0.45);
+
+  font-size: 9px;
+
+  letter-spacing:
+    0.22em;
+}
+
+
+.score-entry__input {
+  width: 116px;
+
+  padding:
+    9px 10px;
+
+  border:
+    1px solid rgba(0,
+      229,
+      255,
+      0.55);
+
+  outline: none;
+
+  color: #00e5ff;
+
+  background:
+    rgba(0,
+      8,
+      14,
+      0.75);
+
+  font-size: 22px;
+
+  text-align: center;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.22em;
+
+  caret-color:
+    #00e5ff;
+}
+
+
+.score-entry__input:focus {
+  border-color:
+    #00e5ff;
+
+  box-shadow:
+    0 0 18px rgba(0,
+      229,
+      255,
+      0.2);
+}
+
+
+.score-entry__input::placeholder {
+  color:
+    rgba(0,
+      229,
+      255,
+      0.2);
+}
+
+
+.score-entry__button {
+  padding:
+    8px 14px;
+
+  border:
+    1px solid rgba(0,
+      229,
+      255,
+      0.4);
+
+  color:
+    rgba(0,
+      229,
+      255,
+      0.9);
+
+  background:
+    rgba(0,
+      8,
+      14,
+      0.6);
+
+  cursor: pointer;
+
+  font-size: 9px;
+
+  letter-spacing:
+    0.14em;
+}
+
+
+.score-entry__button:hover:not( :disabled) {
+  color: #030304;
+
+  background:
+    #00e5ff;
+}
+
+
+.score-entry__button:disabled {
+  opacity: 0.3;
+
+  cursor: default;
+}
+
+
+.score-entry__confirmed {
+  margin-bottom:
+    22px;
+
+  color: #41ff87;
+
+  font-size: 10px;
+
+  letter-spacing:
+    0.2em;
+
+  text-shadow:
+    0 0 12px rgba(65,
+      255,
+      135,
+      0.4);
+}
