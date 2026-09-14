@@ -1,5 +1,7 @@
 export default function Leaderboard({
 	entries,
+	loading = false,
+	error = "",
 }) {
 	return (
 		<div className="leaderboard">
@@ -8,7 +10,9 @@ export default function Leaderboard({
 			</div>
 
 
-			{entries.length ===
+			{loading || error ? (
+                <div className="leaderboard__empty" role="status">{loading ? "LOADING HIGH SCORES…" : error}</div>
+            ) : entries.length ===
 				0 ? (
 				<div className="leaderboard__empty">
 					NO SIGNALS RECORDED

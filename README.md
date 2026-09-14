@@ -95,10 +95,25 @@ Rapier kinematic bodies and sensor colliders handle gameplay intersections. Proj
 git clone https://github.com/Dsaar/Glitch-Void-Zero.git
 cd Glitch-Void-Zero
 npm ci
+cp .env.example .env
+# Fill in MONGODB_URI in .env before starting.
 npm run dev
 ```
 
-Open the local URL printed by Vite. The app runs entirely in the browser; no backend service or environment variables are required.
+Open the local URL printed by Vite. Vite also serves `/api/leaderboard` locally (including `npm run preview`). Restart the server after changing `.env`.
+
+### MongoDB leaderboard setup
+
+1. Create a MongoDB database, locally or on Atlas. For Atlas, create a database user and allow your development/deployment server to connect through the cluster network access settings.
+2. Replace the placeholders in `.env`: `MONGODB_URI` is your connection string. Include the database name in its path (for example, `/glitch_void_zero?retryWrites=true&w=majority`); if omitted, the server uses `glitch_void_zero`. URL-encode special characters in the connection-string username/password.
+3. The server creates the `leaderboard` collection and ranking index on first use. The database user needs permissions to read, insert, and create indexes in that database.
+4. For Vercel, add `MONGODB_URI` in the project's environment settings for the appropriate environments, then redeploy. The `api/leaderboard.js` function serves the same endpoint in production. A static-only host needs a Node backend to serve this endpoint.
+
+`.env` is ignored by Git; `.env.example` contains shareable placeholders. Never use the `VITE_` prefix for MongoDB credentials: that would expose them to the browser.
+
+Scores are stored centrally and the ten highest scores are displayed, with earlier submissions first for ties. Existing browser-local scores are not migrated. Loading or database failures appear in the UI; failed saves can be retried. The API validates callsigns and scores, but scores are still supplied by the browser; this is not an anti-cheat system. A timed-out save may already have reached the database, so retrying can create a duplicate.
+
+Implementation references: [MongoDB Node driver](https://www.mongodb.com/docs/drivers/node/current/) and [Vercel Node functions](https://vercel.com/docs/functions/runtimes/node-js).
 
 ### Available commands
 
@@ -108,6 +123,7 @@ Open the local URL printed by Vite. The app runs entirely in the browser; no bac
 | `npm run build` | Create the production build in `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run API validation and error-handling tests |
 
 To preview a production build:
 

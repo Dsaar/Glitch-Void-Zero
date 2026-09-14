@@ -1,5 +1,7 @@
 import {
 	useState,
+	useEffect,
+	useRef,
 } from "react";
 
 
@@ -72,7 +74,7 @@ export default function GameUI() {
 		setLeaderboard,
 	] =
 		useState(
-			getLeaderboard
+			[]
 		);
 
 
@@ -92,6 +94,33 @@ export default function GameUI() {
 		);
 
 
+	const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+	const [leaderboardError, setLeaderboardError] = useState("");
+	const [savingScore, setSavingScore] = useState(false);
+	const [saveError, setSaveError] = useState("");
+	const submissionPending = useRef(false);
+	const mission = useRef(0);
+	const [refreshLeaderboard, setRefreshLeaderboard] = useState(0);
+
+	useEffect(() => {
+		const controller = new AbortController();
+		getLeaderboard(AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]))
+			.then((entries) => {
+				if (!controller.signal.aborted) {
+					setLeaderboard(entries);
+					setLeaderboardError("");
+				}
+			})
+			.catch(() => {
+				if (!controller.signal.aborted) setLeaderboardError("HIGH SCORES UNAVAILABLE");
+			})
+			.finally(() => {
+				if (!controller.signal.aborted) setLeaderboardLoading(false);
+			});
+		return () => controller.abort();
+	}, [phase, refreshLeaderboard]);
+
+
 	// ----------------------------------------------------
 	// Start / restart
 	// ----------------------------------------------------
@@ -99,6 +128,10 @@ export default function GameUI() {
 	const handleStartGame =
 		() => {
 			setCallsign("");
+			mission.current += 1;
+			submissionPending.current = false;
+			setSavingScore(false);
+			setSaveError("");
 
 			setScoreSubmitted(
 				false
@@ -140,39 +173,27 @@ export default function GameUI() {
 	// Save score
 	// ----------------------------------------------------
 
-	const handleSubmitScore =
-		(
-			event
-		) => {
-			event.preventDefault();
-
-
-			if (
-				scoreSubmitted ||
-				callsign.length ===
-				0
-			) {
-				return;
+	const handleSubmitScore = async (event) => {
+		event.preventDefault();
+		if (scoreSubmitted || submissionPending.current || !callsign.length) return;
+		const submittedMission = mission.current;
+		submissionPending.current = true;
+		setSavingScore(true);
+		setSaveError("");
+		try {
+			await saveScore(callsign, score);
+			if (mission.current !== submittedMission) return;
+			setScoreSubmitted(true);
+			setRefreshLeaderboard((value) => value + 1);
+		} catch {
+			if (mission.current === submittedMission) setSaveError("TRANSMISSION FAILED. PLEASE TRY AGAIN.");
+		} finally {
+			if (mission.current === submittedMission) {
+				submissionPending.current = false;
+				setSavingScore(false);
 			}
-
-
-			const nextLeaderboard =
-				saveScore(
-					callsign,
-					score
-				);
-
-
-			setLeaderboard(
-				nextLeaderboard
-			);
-
-
-			setScoreSubmitted(
-				true
-			);
-		};
-
+		}
+	};
 
 	return (
 		<div className="game-ui">
@@ -332,6 +353,8 @@ export default function GameUI() {
 						{/* ---------------------------------------- */}
 
 						<Leaderboard
+                            loading={leaderboardLoading}
+                            error={leaderboardError}
 							entries={
 								leaderboard
 							}
@@ -434,13 +457,14 @@ export default function GameUI() {
 									className="score-entry__button"
 
 									disabled={
-										callsign.length ===
+										savingScore || callsign.length ===
 										0
 									}
 								>
-									TRANSMIT SCORE
+									{savingScore ? "TRANSMITTING…" : "TRANSMIT SCORE"}
 								</button>
-							</form>
+							{saveError && <div role="alert" className="leaderboard__empty">{saveError}</div>}
+                            </form>
 						) : (
 							<div className="score-entry__confirmed">
 								SCORE TRANSMITTED
@@ -453,6 +477,8 @@ export default function GameUI() {
 						{/* ---------------------------------------- */}
 
 						<Leaderboard
+                            loading={leaderboardLoading}
+                            error={leaderboardError}
 							entries={
 								leaderboard
 							}
