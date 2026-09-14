@@ -488,30 +488,16 @@ canvas {
 
 
 .life-icon {
-  font-size: 18px;
-
-  transition:
-    opacity 160ms ease;
+  display: block;
+  width: 24px;
+  height: 24px;
 }
 
-
-.life-icon--active {
-  color: #ff2d8a;
-
-  text-shadow:
-    0 0 12px rgba(255,
-      45,
-      138,
-      0.65);
-}
-
-
-.life-icon--lost {
-  color:
-    rgba(255,
-      255,
-      255,
-      0.14);
+@media (min-width: 768px) {
+  .life-icon {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 
