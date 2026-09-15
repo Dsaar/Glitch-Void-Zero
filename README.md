@@ -5,7 +5,7 @@
 **Enter the signal. Survive the void.**
 
 A browser-based 3D arcade shooter set above a shifting neon landscape.
-Built with React, Three.js, and custom GLSL shaders.
+Built with React, Three.js, custom GLSL shaders, and a MongoDB-backed leaderboard.
 
 [**Play the live demo →**](https://glitch-void-zero.vercel.app/) · [Source code](https://github.com/Dsaar/Glitch-Void-Zero)
 
@@ -16,29 +16,31 @@ Built with React, Three.js, and custom GLSL shaders.
 
 </div>
 
-![Glitch Void Zero title screen with neon wireframe mountains and the Start Mission button](docs/screenshots/title-screen.png)
+![Glitch Void Zero title screen with neon terrain, Start Mission button, and shared high scores](docs/screenshots/title-screen.png)
 
 ## Overview
 
 Glitch Void Zero combines arcade survival gameplay with a retro digital aesthetic. Pilot a spaceship through a procedural landscape, destroy incoming enemies, and collect power-ups as the pace increases. Bloom, chromatic aberration, scanlines, and animated terrain give the world its glitch-inspired character.
 
-The project brings together real-time 3D rendering, physics-based collision detection, responsive game UI, and custom shader programming in a single React application.
+The project brings together real-time 3D rendering, physics-based collision detection, responsive game UI, and custom shader programming with a Node.js API for persistent high scores shared across browsers and devices.
 
 ## Features
 
 - **3D arcade combat** — steer a GLB spaceship, aim with an on-screen reticle, and fire projectiles at incoming enemies.
+- **Neon spaceship** — a cyan emissive tint makes the ship glow through the existing bloom effect while retaining its base textures.
+- **Shared high scores** — a MongoDB-backed top-ten leaderboard appears on the title and game-over screens, with callsign submission after each mission.
 - **Escalating difficulty** — enemies move faster and spawn more frequently as a run progresses.
 - **Power-up pickups** — collect rapid fire, a speed boost, or a shield from defeated enemies.
 - **Procedural neon terrain** — custom vertex and fragment shaders animate a landscape with solid and wireframe layers.
 - **CRT-inspired effects** — bloom, RGB separation, scanlines, and digital grain respond to the evolving glitch state.
 - **Desktop and touch input** — keyboard controls on desktop; a virtual joystick and dedicated fire button on touch devices.
-- **Complete mission loop** — title screen, live score and hull indicators, power-up HUD, game-over screen, and instant restart.
+- **Complete mission loop** — title screen, live score and ship-shaped hull indicators, power-up HUD, callsign entry, score submission feedback, and instant restart.
 
 ## Gameplay
 
-![Live gameplay showing the player spaceship, approaching enemies, aiming reticle, score, and hull indicators](docs/screenshots/gameplay.png)
+![Live gameplay showing the cyan emissive spaceship, aiming reticle, score, and ship-shaped hull indicators](docs/screenshots/gameplay.png)
 
-*Screenshots captured from the [live demo](https://glitch-void-zero.vercel.app/).*
+*Screenshots refreshed from the [live demo](https://glitch-void-zero.vercel.app/) on September 14, 2026. Leaderboard entries reflect the scores visible at capture time.*
 
 Select **Start Mission**, line up incoming targets, and survive for as long as you can. Each destroyed enemy earns **100 points**. You begin with **three lives**; losing all three ends the mission. Enemy speed and spawn frequency increase over time.
 
@@ -53,6 +55,12 @@ Select **Start Mission**, line up incoming targets, and survive for as long as y
 | Rapid fire | Increases firing rate for 10 seconds |
 | Speed boost | Increases movement speed for 10 seconds |
 | Shield | Absorbs one enemy collision |
+
+### Record your score
+
+![Game-over screen with callsign entry, Transmit Score, shared high scores, and Restart Mission](docs/screenshots/game-over.png)
+
+After a mission ends, enter a **1–3 character callsign** using letters or digits and select **Transmit Score**. Callsigns are normalized to uppercase. A successful submission is stored in MongoDB; the leaderboard displays the ten highest scores, with earlier submissions first when scores tie. Loading, saving, and failure states appear in the UI, and failed requests can be retried.
 
 ## Technical highlights
 
@@ -70,7 +78,18 @@ Rapier kinematic bodies and sensor colliders handle gameplay intersections. Proj
 
 ### Assets and input
 
-[ShipModel.jsx](src/components/game/ShipModel.jsx) preloads the spaceship model, centers it using its bounding box, and normalizes its scale. Keyboard and pointer input feed the same player controller, with touch controls displayed when a touch device is detected.
+[ShipModel.jsx](src/components/game/ShipModel.jsx) preloads the spaceship model, centers it using its bounding box, and normalizes its scale. It clones the materials before applying cyan emission (`#00e5ff`, intensity `1.5`), preserving the cached GLB and its base textures. `SHIP_GLOW_COLOR` and `SHIP_GLOW_INTENSITY` control the tint and strength. Keyboard and pointer input feed the same player controller, with touch controls displayed when a touch device is detected.
+
+### Persistent leaderboard
+
+[Leaderboard.jsx](src/components/game/Leaderboard.jsx) renders rankings and loading/error states. [leaderboardStorage.js](src/components/game/leaderboardStorage.js) now requests the shared API instead of browser-local storage. [server/leaderboard.js](server/leaderboard.js) validates submissions, while [server/mongodb.js](server/mongodb.js) reuses a database connection and creates the ranking index on first use.
+
+| Endpoint | Behavior |
+| --- | --- |
+| `GET /api/leaderboard` | Returns up to ten entries ordered by score descending, then submission time and ID ascending |
+| `POST /api/leaderboard` | Accepts JSON `{ "name": "ACE", "score": 1200 }`; returns `201` with `{ "saved": true }` |
+
+The API accepts 1–3 alphanumeric callsign characters and nonnegative safe-integer scores, limits request bodies to 1 KB, and reports unavailable database connections with `503`. Vite serves the endpoint during development and preview; [api/leaderboard.js](api/leaderboard.js) exposes it as a Vercel function in production.
 
 ## Tech stack
 
@@ -85,7 +104,9 @@ Rapier kinematic bodies and sensor colliders handle gameplay intersections. Proj
 | Zustand | Shared game state |
 | Vite 8 | Development server and production bundling |
 | ESLint | Static code analysis |
-| Vercel | Live demo hosting |
+| MongoDB + Node.js driver | Persistent shared leaderboard and ranking index |
+| Node.js | Leaderboard API and built-in test runner |
+| Vercel | Frontend hosting and serverless leaderboard endpoint |
 
 ## Run locally
 
@@ -95,8 +116,17 @@ Rapier kinematic bodies and sensor colliders handle gameplay intersections. Proj
 git clone https://github.com/Dsaar/Glitch-Void-Zero.git
 cd Glitch-Void-Zero
 npm ci
-cp .env.example .env
-# Fill in MONGODB_URI in .env before starting.
+```
+
+Create a `.env` file in the project root with your server-side MongoDB connection string. For example, for a local database:
+
+```dotenv
+MONGODB_URI=mongodb://127.0.0.1:27017/glitch_void_zero
+```
+
+Then start the app:
+
+```bash
 npm run dev
 ```
 
@@ -105,11 +135,11 @@ Open the local URL printed by Vite. Vite also serves `/api/leaderboard` locally 
 ### MongoDB leaderboard setup
 
 1. Create a MongoDB database, locally or on Atlas. For Atlas, create a database user and allow your development/deployment server to connect through the cluster network access settings.
-2. Replace the placeholders in `.env`: `MONGODB_URI` is your connection string. Include the database name in its path (for example, `/glitch_void_zero?retryWrites=true&w=majority`); if omitted, the server uses `glitch_void_zero`. URL-encode special characters in the connection-string username/password.
+2. Configure `.env`: `MONGODB_URI` is your connection string. Include the database name in its path (for example, `/glitch_void_zero?retryWrites=true&w=majority`); if omitted, the server uses `glitch_void_zero`. URL-encode special characters in the connection-string username/password.
 3. The server creates the `leaderboard` collection and ranking index on first use. The database user needs permissions to read, insert, and create indexes in that database.
 4. For Vercel, add `MONGODB_URI` in the project's environment settings for the appropriate environments, then redeploy. The `api/leaderboard.js` function serves the same endpoint in production. A static-only host needs a Node backend to serve this endpoint.
 
-`.env` is ignored by Git; `.env.example` contains shareable placeholders. Never use the `VITE_` prefix for MongoDB credentials: that would expose them to the browser.
+`.env` is ignored by Git. Keep real connection strings out of source control and documentation. Never use the `VITE_` prefix for MongoDB credentials: that would expose them to the browser.
 
 Scores are stored centrally and the ten highest scores are displayed, with earlier submissions first for ties. Existing browser-local scores are not migrated. Loading or database failures appear in the UI; failed saves can be retried. The API validates callsigns and scores, but scores are still supplied by the browser; this is not an anti-cheat system. A timed-out save may already have reached the database, so retrying can create a duplicate.
 
@@ -136,6 +166,11 @@ npm run preview
 
 ```text
 Glitch-Void-Zero/
+├── api/leaderboard.js          # Vercel leaderboard function
+├── server/
+│   ├── leaderboard.js          # API validation and ranking queries
+│   ├── mongodb.js              # Database connection and index
+│   └── leaderboard.test.js     # API tests
 ├── docs/screenshots/           # README captures from the live app
 ├── public/
 │   └── models/                # Spaceship GLB asset
