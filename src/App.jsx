@@ -13,7 +13,7 @@ import GameUI from "./components/game/GameUI";
 
 import {
   useKeyboard,
-} from "./components/game/useKeyboard";
+} from "./hooks/useKeyboard";
 
 import GlitchTerrain from "./components/glitch/GlitchTerrain";
 

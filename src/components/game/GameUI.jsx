@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	useState,
 	useEffect,
@@ -16,11 +18,8 @@ import {
 	saveScore,
 } from "./leaderboardStorage.js";
 
-import {
-	useGameStore,
-} from "./gameStore";
 
-import useTouchDevice from "./useTouchDevice";
+import useTouchDevice from "../../hooks/useTouchDevice";
 import Leaderboard from "./Leaderboard.jsx";
 
 

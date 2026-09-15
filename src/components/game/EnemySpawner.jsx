@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	useRef,
 } from "react";
@@ -8,7 +10,6 @@ import {
 
 import {
 	genId,
-	useGameStore,
 } from "./gameStore";
 
 

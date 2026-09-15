@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	Suspense,
 } from "react";
@@ -20,9 +22,6 @@ import PowerUp from "./PowerUp";
 
 import Projectile from "./Projectile";
 
-import {
-	useGameStore,
-} from "./gameStore";
 
 
 export default function GameScene() {

@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import { useEffect, useRef } from "react";
 import {
 	useFrame,
@@ -10,7 +12,6 @@ import {
 
 import {
 	playerState,
-	useGameStore,
 } from "./gameStore";
 
 

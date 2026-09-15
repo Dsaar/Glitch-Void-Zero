@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	useRef,
 } from "react";
@@ -16,7 +18,7 @@ import * as THREE from "three";
 
 import {
 	keys,
-} from "./useKeyboard";
+} from "../../hooks/useKeyboard";
 
 import {
 	touchState,
@@ -26,7 +28,6 @@ import {
 	invulnState,
 	playerState,
 	powerUpState,
-	useGameStore,
 } from "./gameStore";
 
 import ShipModel from "./ShipModel";

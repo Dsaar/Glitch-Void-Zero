@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	useMemo,
 	useRef,
@@ -9,9 +11,6 @@ import {
 
 import * as THREE from "three";
 
-import {
-	useGameStore,
-} from "./gameStore";
 
 
 const LIFE = 0.7;

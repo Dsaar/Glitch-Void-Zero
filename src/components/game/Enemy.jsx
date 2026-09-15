@@ -1,3 +1,5 @@
+import { useGameStore } from "../../hooks/useGameStore";
+
 import {
 	useRef,
 } from "react";
@@ -12,9 +14,6 @@ import {
 	RigidBody,
 } from "@react-three/rapier";
 
-import {
-	useGameStore,
-} from "./gameStore";
 
 
 const COLORS = [
