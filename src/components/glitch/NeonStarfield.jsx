@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+import starVertexShader from "./shaders/starfield/vertex.glsl?raw";
+import starFragmentShader from "./shaders/starfield/fragment.glsl?raw";
+
 const STAR_COUNT = 900;
 
 const PALETTE = [
@@ -23,146 +26,6 @@ function seededRandom(seed) {
 
 	return value - Math.floor(value);
 }
-
-
-// ------------------------------------------------------
-// Star vertex shader
-// ------------------------------------------------------
-
-const starVertexShader = /* glsl */ `
-uniform float uTime;
-
-attribute float aSeed;
-attribute vec3 aColor;
-
-varying vec3 vColor;
-varying float vAlpha;
-
-
-float hash(float n) {
-  return fract(
-    sin(n) *
-    43758.5453123
-  );
-}
-
-
-void main() {
-  vColor = aColor;
-
-
-  // ----------------------------------------------------
-  // Gentle twinkle
-  // ----------------------------------------------------
-
-  float twinkle =
-    0.55 +
-    0.45 *
-    sin(
-      uTime *
-      (
-        1.2 +
-        aSeed * 2.0
-      ) +
-      aSeed * 40.0
-    );
-
-
-  // ----------------------------------------------------
-  // Digital glitch flicker
-  // ----------------------------------------------------
-
-  float slot =
-    floor(
-      uTime * 3.0 +
-      aSeed * 90.0
-    );
-
-  float randomValue =
-    hash(
-      slot +
-      aSeed * 17.0
-    );
-
-  float flicker = 1.0;
-
-  if (randomValue > 0.96) {
-    flicker = 2.2;
-  }
-
-  if (randomValue < 0.03) {
-    flicker = 0.0;
-  }
-
-
-  vAlpha =
-    twinkle *
-    flicker;
-
-
-  // ----------------------------------------------------
-  // Position and apparent star size
-  // ----------------------------------------------------
-
-  vec4 modelViewPosition =
-    modelViewMatrix *
-    vec4(
-      position,
-      1.0
-    );
-
-  gl_PointSize =
-    (
-      1.4 +
-      aSeed * 2.4
-    ) *
-    (
-      280.0 /
-      -modelViewPosition.z
-    );
-
-
-  gl_Position =
-    projectionMatrix *
-    modelViewPosition;
-}
-`;
-
-
-// ------------------------------------------------------
-// Star fragment shader
-// ------------------------------------------------------
-
-const starFragmentShader = /* glsl */ `
-varying vec3 vColor;
-varying float vAlpha;
-
-
-void main() {
-  vec2 center =
-    gl_PointCoord -
-    0.5;
-
-  float distanceFromCenter =
-    length(center);
-
-
-  // Turn the square point into a soft circular star.
-  float mask =
-    smoothstep(
-      0.5,
-      0.15,
-      distanceFromCenter
-    );
-
-
-  gl_FragColor =
-    vec4(
-      vColor,
-      vAlpha * mask
-    );
-}
-`;
 
 
 // ------------------------------------------------------
