@@ -1,4 +1,4 @@
-import { useGameStore } from "../../hooks/useGameStore";
+import { useGameStore } from "../../../hooks/useGameStore";
 
 import {
 	useRef,
@@ -18,17 +18,17 @@ import * as THREE from "three";
 
 import {
 	keys,
-} from "../../hooks/useKeyboard";
+} from "../../../hooks/useKeyboard";
 
 import {
 	touchState,
-} from "./touchState";
+} from "../../../state/touchState";
 
 import {
 	invulnState,
 	playerState,
 	powerUpState,
-} from "./gameStore";
+} from "../../../state/gameState";
 
 import ShipModel from "./ShipModel";
 

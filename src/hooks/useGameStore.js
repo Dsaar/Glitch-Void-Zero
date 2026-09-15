@@ -5,7 +5,7 @@ import {
 	invulnState,
 	playerState,
 	powerUpState,
-} from "../components/game/gameStore";
+} from "../state/gameState";
 
 
 const INVULNERABILITY_DURATION = 2;

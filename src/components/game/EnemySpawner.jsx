@@ -10,7 +10,7 @@ import {
 
 import {
 	genId,
-} from "./gameStore";
+} from "../../state/gameState";
 
 
 const SPAWN_Z = -190;

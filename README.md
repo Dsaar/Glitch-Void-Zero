@@ -72,17 +72,17 @@ After a mission ends, enter a **1–3 character callsign** using letters or digi
 
 ### Game state and collision handling
 
-[gameStore.js](src/components/game/gameStore.js) uses Zustand for mission phases, score, lives, and entity collections. Mutable input, player, and power-up state support frame-by-frame reads without requiring React renders for every movement update.
+[useGameStore.js](src/hooks/useGameStore.js) uses Zustand for mission phases, score, lives, and entity collections. Mutable input, player, and power-up state support frame-by-frame reads without requiring React renders for every movement update.
 
 Rapier kinematic bodies and sensor colliders handle gameplay intersections. Projectile hits remove enemies, award points, create explosions, and can spawn power-ups. [EnemySpawner.jsx](src/components/game/EnemySpawner.jsx) controls the difficulty ramp and seeds a new pseudo-random spawn sequence for each run.
 
 ### Assets and input
 
-[ShipModel.jsx](src/components/game/ShipModel.jsx) preloads the spaceship model, centers it using its bounding box, and normalizes its scale. It clones the materials before applying cyan emission (`#00e5ff`, intensity `1.5`), preserving the cached GLB and its base textures. `SHIP_GLOW_COLOR` and `SHIP_GLOW_INTENSITY` control the tint and strength. Keyboard and pointer input feed the same player controller, with touch controls displayed when a touch device is detected.
+[ShipModel.jsx](src/components/game/entities/ShipModel.jsx) preloads the spaceship model, centers it using its bounding box, and normalizes its scale. It clones the materials before applying cyan emission (`#00e5ff`, intensity `1.5`), preserving the cached GLB and its base textures. `SHIP_GLOW_COLOR` and `SHIP_GLOW_INTENSITY` control the tint and strength. Keyboard and pointer input feed the same player controller, with touch controls displayed when a touch device is detected.
 
 ### Persistent leaderboard
 
-[Leaderboard.jsx](src/components/game/Leaderboard.jsx) renders rankings and loading/error states. [leaderboardStorage.js](src/components/game/leaderboardStorage.js) now requests the shared API instead of browser-local storage. [server/leaderboard.js](server/leaderboard.js) validates submissions, while [server/mongodb.js](server/mongodb.js) reuses a database connection and creates the ranking index on first use.
+[Leaderboard.jsx](src/components/game/ui/Leaderboard.jsx) renders rankings and loading/error states. [leaderboardApi.js](src/services/leaderboardApi.js) now requests the shared API instead of browser-local storage. [server/leaderboard.js](server/leaderboard.js) validates submissions, while [server/mongodb.js](server/mongodb.js) reuses a database connection and creates the ranking index on first use.
 
 | Endpoint | Behavior |
 | --- | --- |

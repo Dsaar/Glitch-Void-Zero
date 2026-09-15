@@ -5,7 +5,7 @@ import {
 
 import {
 	powerUpState,
-} from "./gameStore";
+} from "../../../state/gameState";
 
 
 const POWER_UP_NAMES = {

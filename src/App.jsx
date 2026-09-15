@@ -9,7 +9,7 @@ import GameScene from "./components/game/GameScene";
 import LoadingOverlay from "./components/glitch/LoadingOverlay";
 
 
-import GameUI from "./components/game/GameUI";
+import GameUI from "./components/game/ui/GameUI";
 
 import {
   useKeyboard,

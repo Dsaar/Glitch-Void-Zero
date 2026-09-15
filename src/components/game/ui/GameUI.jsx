@@ -1,4 +1,4 @@
-import { useGameStore } from "../../hooks/useGameStore";
+import { useGameStore } from "../../../hooks/useGameStore";
 
 import {
 	useState,
@@ -11,15 +11,15 @@ import LivesCounter from "./LivesCounter";
 
 import PowerUpHUD from "./PowerUpHUD";
 
-import TouchControls from "./TouchControls";
+import TouchControls from "../controls/TouchControls";
 
 import {
 	getLeaderboard,
 	saveScore,
-} from "./leaderboardStorage.js";
+} from "../../../services/leaderboardApi.js";
 
 
-import useTouchDevice from "../../hooks/useTouchDevice";
+import useTouchDevice from "../../../hooks/useTouchDevice";
 import Leaderboard from "./Leaderboard.jsx";
 
 

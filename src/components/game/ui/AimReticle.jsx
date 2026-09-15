@@ -12,7 +12,7 @@ import * as THREE from "three";
 
 import {
 	playerState,
-} from "./gameStore";
+} from "../../../state/gameState";
 
 
 const RETICLE_Z = -45;

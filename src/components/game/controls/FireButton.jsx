@@ -1,6 +1,6 @@
 import {
 	touchState,
-} from "./touchState";
+} from "../../../state/touchState";
 
 
 export default function FireButton() {

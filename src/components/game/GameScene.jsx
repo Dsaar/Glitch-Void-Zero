@@ -8,19 +8,19 @@ import {
 	Physics,
 } from "@react-three/rapier";
 
-import AimReticle from "./AimReticle";
+import AimReticle from "./ui/AimReticle";
 
-import Enemy from "./Enemy";
+import Enemy from "./entities/Enemy";
 
 import EnemySpawner from "./EnemySpawner";
 
-import Explosion from "./Explosion";
+import Explosion from "./entities/Explosion";
 
-import PlayerShip from "./PlayerShip";
+import PlayerShip from "./entities/PlayerShip";
 
-import PowerUp from "./PowerUp";
+import PowerUp from "./entities/PowerUp";
 
-import Projectile from "./Projectile";
+import Projectile from "./entities/Projectile";
 
 
 

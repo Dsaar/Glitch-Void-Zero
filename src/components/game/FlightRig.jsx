@@ -12,7 +12,7 @@ import {
 
 import {
 	playerState,
-} from "./gameStore";
+} from "../../state/gameState";
 
 
 // ------------------------------------------------------

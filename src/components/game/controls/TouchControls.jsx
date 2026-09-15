@@ -8,7 +8,7 @@ import VirtualJoystick from "./VirtualJoystick";
 
 import {
 	resetTouchState,
-} from "./touchState";
+} from "../../../state/touchState";
 
 
 export default function TouchControls() {

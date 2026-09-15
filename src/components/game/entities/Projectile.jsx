@@ -1,4 +1,4 @@
-import { useGameStore } from "../../hooks/useGameStore";
+import { useGameStore } from "../../../hooks/useGameStore";
 
 import {
 	useRef,
@@ -16,7 +16,7 @@ import {
 
 import {
 	genId,
-} from "./gameStore";
+} from "../../../state/gameState";
 
 
 const PROJECTILE_SPEED =

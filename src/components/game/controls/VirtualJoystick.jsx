@@ -4,7 +4,7 @@ import {
 
 import {
 	touchState,
-} from "./touchState";
+} from "../../../state/touchState";
 
 
 const MAX_DISTANCE = 42;
