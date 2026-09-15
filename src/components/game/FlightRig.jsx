@@ -8,7 +8,7 @@ import {
 
 import {
 	glitchState,
-} from "../glitch/glitchState";
+} from "../../state/glitchState";
 
 import {
 	playerState,

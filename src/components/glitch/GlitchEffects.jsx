@@ -22,7 +22,7 @@ import {
 
 import {
 	glitchState,
-} from "./glitchState";
+} from "../../state/glitchState";
 
 
 // ------------------------------------------------------
@@ -59,7 +59,7 @@ function readEffectState() {
 // Post-processing
 // ------------------------------------------------------
 
-export default function Effects() {
+export default function GlitchEffects() {
 	const [
 		effectState,
 		setEffectState,

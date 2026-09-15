@@ -5,7 +5,7 @@ import * as THREE from "three";
 import terrainVertex from "./shaders/terrain/vertex.glsl?raw";
 import terrainFragment from "./shaders/terrain/fragment.glsl?raw";
 
-import { glitchState } from "./glitchState";
+import { glitchState } from "../../state/glitchState";
 
 
 function createTerrainMaterial(wireframe) {

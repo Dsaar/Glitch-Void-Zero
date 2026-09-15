@@ -6,7 +6,7 @@ import FlightRig from "./components/game/FlightRig";
 
 import GameScene from "./components/game/GameScene";
 
-import LoadingOverlay from "./components/glitch/LoadingOverlay";
+import LoadingOverlay from "./components/ui/LoadingOverlay";
 
 
 import GameUI from "./components/game/ui/GameUI";
@@ -18,7 +18,7 @@ import {
 import GlitchTerrain from "./components/glitch/GlitchTerrain";
 
 import NeonStarfield from "./components/glitch/NeonStarfield";
-import Effects from "./components/glitch/Effects";
+import GlitchEffects from "./components/glitch/GlitchEffects";
 
 
 
@@ -138,7 +138,7 @@ function App() {
         {/* ------------------------------------------ */}
 
         <GameScene />
-        <Effects/>
+        <GlitchEffects/>
       </Canvas>
     </>
   );

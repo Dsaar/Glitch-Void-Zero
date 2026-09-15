@@ -66,9 +66,9 @@ After a mission ends, enter a **1–3 character callsign** using letters or digi
 
 ### Rendering and visual effects
 
-[GlitchTerrain.jsx](src/components/glitch/GlitchTerrain.jsx) renders a shared plane geometry with separate solid and wireframe shader materials. Frame updates drive time, terrain offset, and glitch intensity through uniforms, while the terrain stays positioned ahead of the camera. The custom GLSL lives in [terrainShaders.js](src/components/glitch/terrainShaders.js).
+[GlitchTerrain.jsx](src/components/glitch/GlitchTerrain.jsx) renders a shared plane geometry with separate solid and wireframe shader materials. Frame updates drive time, terrain offset, and glitch intensity through uniforms, while the terrain stays positioned ahead of the camera. The custom GLSL lives in [terrain shader files](src/components/glitch/shaders/terrain).
 
-[Effects.jsx](src/components/glitch/Effects.jsx) composes bloom, chromatic aberration, scanlines, and noise. Effect settings sample the shared glitch state at 10 Hz, limiting React updates while the scene continues animating through the render loop.
+[GlitchEffects.jsx](src/components/glitch/GlitchEffects.jsx) composes bloom, chromatic aberration, scanlines, and noise. Effect settings sample the shared glitch state at 10 Hz, limiting React updates while the scene continues animating through the render loop.
 
 ### Game state and collision handling
 
