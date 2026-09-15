@@ -21,9 +21,11 @@ import {
 
 import useTouchDevice from "../../../hooks/useTouchDevice";
 import Leaderboard from "./Leaderboard.jsx";
+import useBackgroundMusic from "../../../hooks/useBackgroundMusic.js";
 
 
 export default function GameUI() {
+	const { startMusic, toggleMusic, playing: musicPlaying, error: musicError } = useBackgroundMusic();
 	// ----------------------------------------------------
 	// Game state
 	// ----------------------------------------------------
@@ -146,6 +148,7 @@ export default function GameUI() {
 
 	const handleStartGame =
 		() => {
+			startMusic();
 			setCallsign("");
 			mission.current += 1;
 			submissionPending.current = false;
@@ -216,6 +219,16 @@ export default function GameUI() {
 
 	return (
 		<div className="game-ui">
+			<button
+				type="button"
+				className="music-toggle"
+				onClick={toggleMusic}
+				aria-label={musicPlaying ? "Turn background music off" : "Turn background music on"}
+				aria-pressed={musicPlaying}
+				title={musicError ? "Music could not play. Click to retry." : "Neon Protocol"}
+			>
+				{musicError ? "MUSIC: RETRY" : musicPlaying ? "MUSIC: ON" : "MUSIC: OFF"}
+			</button>
 			{/* ============================================ */}
 			{/* Playing */}
 			{/* ============================================ */}

@@ -35,6 +35,7 @@ The project brings together real-time 3D rendering, physics-based collision dete
 - **CRT-inspired effects** — bloom, RGB separation, scanlines, and digital grain respond to the evolving glitch state.
 - **Desktop and touch input** — keyboard controls on desktop; a virtual joystick and dedicated fire button on touch devices.
 - **Complete mission loop** — title screen, live score and ship-shaped hull indicators, power-up HUD, callsign entry, score submission feedback, and instant restart.
+- **Background music** — “Neon Protocol” loops at 35% volume after selecting Start Mission. Use the Music button to turn it on or off; playback pauses while the tab is hidden and resumes when you return. Music continues through game over and restarts without resetting the track.
 
 ## Gameplay
 
@@ -206,6 +207,8 @@ Glitch-Void-Zero/
 ```
 
 ## Third-Party Assets
+
+**Background music:** “Neon Protocol” by **danieljoshuasaar**, supplied for this game. [Original Suno song](https://suno.com/s/6KQFBR87TKfkaMSy). Bundled local audio: `public/audio/neon-protocol.mp3`.
 
 **Spaceship:** "Intergalactic Spaceship in Blender 2.8 Eevee"\
 Created by **Dennis Haupt (3DHaupt)**\
