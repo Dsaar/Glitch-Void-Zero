@@ -1,12 +1,13 @@
 export default function Leaderboard({
 	entries,
+	title = "HIGH SCORES",
 	loading = false,
 	error = "",
 }) {
 	return (
 		<div className="leaderboard">
 			<div className="leaderboard__heading">
-				HIGH SCORES
+				{title}
 			</div>
 
 

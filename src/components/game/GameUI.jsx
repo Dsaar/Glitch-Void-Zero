@@ -94,6 +94,26 @@ export default function GameUI() {
 		);
 
 
+	const [menuPage, setMenuPage] = useState("home");
+	const leaderboardButtonRef = useRef(null);
+	const backButtonRef = useRef(null);
+	const navigateMenu = (page) => {
+		setMenuPage(page);
+		if (page === "leaderboard") {
+			setLeaderboardLoading(true);
+			setLeaderboardError("");
+			setRefreshLeaderboard((value) => value + 1);
+		}
+	};
+	useEffect(() => {
+		if (phase !== "menu") return;
+		if (menuPage === "leaderboard") backButtonRef.current?.focus();
+	}, [menuPage, phase]);
+	const backToMenu = () => {
+		setMenuPage("home");
+		requestAnimationFrame(() => leaderboardButtonRef.current?.focus());
+	};
+
 	const [leaderboardLoading, setLeaderboardLoading] = useState(true);
 	const [leaderboardError, setLeaderboardError] = useState("");
 	const [savingScore, setSavingScore] = useState(false);
@@ -283,84 +303,29 @@ export default function GameUI() {
 			{/* Main menu */}
 			{/* ============================================ */}
 
-			{phase ===
-				"menu" && (
-					<div className="screen-panel">
-						<div className="signal-tag">
-							SYSTEM ONLINE
-						</div>
+            {phase === "menu" && menuPage === "home" && (
+                <section className="screen-panel screen-panel--home" aria-label="Main menu">
+                    <div className="signal-tag">INCOMING TRANSMISSION</div>
+                    <h1 className="game-title">GLITCH<br />VOID<br />ZERO</h1>
+                    <p className="game-subtitle">
+                        {isTouchDevice ? "JOYSTICK TO FLY · FIRE BUTTON TO SHOOT" : "WASD / ARROWS TO FLY · SPACE TO FIRE"}
+                    </p>
+                    <div className="menu-actions">
+                        <button type="button" className="game-button" onClick={handleStartGame}>START MISSION</button>
+                        <button ref={leaderboardButtonRef} type="button" className="game-button" onClick={() => navigateMenu("leaderboard")}>LEADERBOARD</button>
+                    </div>
+                </section>
+            )}
 
-
-						<h1 className="game-title">
-							GLITCH
-							<br />
-							VOID ZERO
-						</h1>
-
-
-						<p className="game-subtitle">
-							ENTER THE SIGNAL.
-							<br />
-							SURVIVE THE VOID.
-						</p>
-
-
-						<button
-							type="button"
-
-							className="game-button"
-
-							onClick={
-								handleStartGame
-							}
-						>
-							START MISSION
-						</button>
-
-
-						{/* ---------------------------------------- */}
-						{/* Controls */}
-						{/* ---------------------------------------- */}
-
-						<div className="menu-controls">
-							<span>
-								MOVE
-							</span>
-
-
-							<strong>
-								{isTouchDevice
-									? "JOYSTICK"
-									: "WASD / ARROWS"}
-							</strong>
-
-
-							<span>
-								FIRE
-							</span>
-
-
-							<strong>
-								{isTouchDevice
-									? "FIRE BUTTON"
-									: "SPACE"}
-							</strong>
-						</div>
-
-
-						{/* ---------------------------------------- */}
-						{/* Leaderboard */}
-						{/* ---------------------------------------- */}
-
-						<Leaderboard
-                            loading={leaderboardLoading}
-                            error={leaderboardError}
-							entries={
-								leaderboard
-							}
-						/>
-					</div>
-				)}
+            {phase === "menu" && menuPage === "leaderboard" && (
+                <section className="screen-panel screen-panel--leaderboard" aria-label="Leaderboard" onKeyDown={(event) => {
+                    if (event.key === "Escape") backToMenu();
+                }}>
+                    <button ref={backButtonRef} type="button" className="game-button" onClick={backToMenu}>BACK</button>
+                    <Leaderboard title="TOP PILOTS" loading={leaderboardLoading} error={leaderboardError} entries={leaderboard} />
+                    {leaderboardError && <button type="button" className="game-button leaderboard-retry" onClick={() => navigateMenu("leaderboard")}>RETRY</button>}
+                </section>
+            )}
 
 
 			{/* ============================================ */}
