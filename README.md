@@ -16,7 +16,7 @@ Built with React, Three.js, custom GLSL shaders, and a MongoDB-backed leaderboar
 
 </div>
 
-![Glitch Void Zero title screen with neon terrain, Start Mission button, and shared high scores](docs/screenshots/title-screen.png)
+![Glitch Void Zero title screen with neon terrain, Start Mission and Leaderboard buttons](docs/screenshots/title-screen.png)
 
 ## Overview
 
@@ -28,7 +28,7 @@ The project brings together real-time 3D rendering, physics-based collision dete
 
 - **3D arcade combat** — steer a GLB spaceship, aim with an on-screen reticle, and fire projectiles at incoming enemies.
 - **Neon spaceship** — a cyan emissive tint makes the ship glow through the existing bloom effect while retaining its base textures.
-- **Shared high scores** — a MongoDB-backed top-ten leaderboard appears on the title and game-over screens, with callsign submission after each mission.
+- **Shared high scores** — a MongoDB-backed top-ten ranking has its own **Top Pilots** screen, accessible through the Leaderboard button below Start Mission. High scores also appear after a mission ends.
 - **Escalating difficulty** — enemies move faster and spawn more frequently as a run progresses.
 - **Power-up pickups** — collect rapid fire, a speed boost, or a shield from defeated enemies.
 - **Procedural neon terrain** — custom vertex and fragment shaders animate a landscape with solid and wireframe layers.
@@ -40,7 +40,7 @@ The project brings together real-time 3D rendering, physics-based collision dete
 
 ![Live gameplay showing the cyan emissive spaceship, aiming reticle, score, and ship-shaped hull indicators](docs/screenshots/gameplay.png)
 
-*Screenshots refreshed from the [live demo](https://glitch-void-zero.vercel.app/) on September 14, 2026. Leaderboard entries reflect the scores visible at capture time.*
+*Screenshots captured from the current project running locally. Leaderboard entries reflect the scores visible at capture time.*
 
 Select **Start Mission**, line up incoming targets, and survive for as long as you can. Each destroyed enemy earns **100 points**. You begin with **three lives**; losing all three ends the mission. Enemy speed and spawn frequency increase over time.
 
@@ -56,9 +56,15 @@ Select **Start Mission**, line up incoming targets, and survive for as long as y
 | Speed boost | Increases movement speed for 10 seconds |
 | Shield | Absorbs one enemy collision |
 
+### Browse the leaderboard
+
+![Dedicated Top Pilots leaderboard with ten ranked callsigns and a Back button](docs/screenshots/leaderboard.png)
+
+Choose **Leaderboard** beneath **Start Mission** to open the dedicated rankings screen. Select **Back**, or press **Escape**, to return to the menu. Opening this screen refreshes the rankings; if loading fails, use **Retry**. Navigation keeps the animated world running in the background.
+
 ### Record your score
 
-![Game-over screen with callsign entry, Transmit Score, shared high scores, and Restart Mission](docs/screenshots/game-over.png)
+![Game-over screen with final score, callsign entry, and shared high scores](docs/screenshots/game-over.png)
 
 After a mission ends, enter a **1–3 character callsign** using letters or digits and select **Transmit Score**. Callsigns are normalized to uppercase. A successful submission is stored in MongoDB; the leaderboard displays the ten highest scores, with earlier submissions first when scores tie. Loading, saving, and failure states appear in the UI, and failed requests can be retried.
 
@@ -66,13 +72,13 @@ After a mission ends, enter a **1–3 character callsign** using letters or digi
 
 ### Rendering and visual effects
 
-[GlitchTerrain.jsx](src/components/glitch/GlitchTerrain.jsx) renders a shared plane geometry with separate solid and wireframe shader materials. Frame updates drive time, terrain offset, and glitch intensity through uniforms, while the terrain stays positioned ahead of the camera. The custom GLSL lives in [terrain shader files](src/components/glitch/shaders/terrain).
+[GlitchTerrain.jsx](src/components/glitch/GlitchTerrain.jsx) renders a shared plane geometry with separate solid and wireframe shader materials. Frame updates drive time, terrain offset, and glitch intensity through uniforms, while the terrain stays positioned ahead of the camera. The custom GLSL lives in separate [vertex](src/components/glitch/shaders/terrain/vertex.glsl) and [fragment](src/components/glitch/shaders/terrain/fragment.glsl) files, imported through Vite’s `?raw` loader. [NeonStarfield.jsx](src/components/glitch/NeonStarfield.jsx) likewise uses dedicated [starfield shaders](src/components/glitch/shaders/starfield).
 
 [GlitchEffects.jsx](src/components/glitch/GlitchEffects.jsx) composes bloom, chromatic aberration, scanlines, and noise. Effect settings sample the shared glitch state at 10 Hz, limiting React updates while the scene continues animating through the render loop.
 
 ### Game state and collision handling
 
-[useGameStore.js](src/hooks/useGameStore.js) uses Zustand for mission phases, score, lives, and entity collections. Mutable input, player, and power-up state support frame-by-frame reads without requiring React renders for every movement update.
+[useGameStore.js](src/hooks/useGameStore.js) uses Zustand for mission phases, score, lives, and entity collections. Frame-by-frame player position, invulnerability, and power-up timers live separately in [gameState.js](src/state/gameState.js). Input and visual state are held in [touchState.js](src/state/touchState.js) and [glitchState.js](src/state/glitchState.js), allowing render-loop reads without React updates for every movement. The store manages `menu`, `playing`, and `gameover`; the home/leaderboard view is local UI state in [GameUI.jsx](src/components/game/ui/GameUI.jsx).
 
 Rapier kinematic bodies and sensor colliders handle gameplay intersections. Projectile hits remove enemies, award points, create explosions, and can spawn power-ups. [EnemySpawner.jsx](src/components/game/EnemySpawner.jsx) controls the difficulty ramp and seeds a new pseudo-random spawn sequence for each run.
 
@@ -82,7 +88,7 @@ Rapier kinematic bodies and sensor colliders handle gameplay intersections. Proj
 
 ### Persistent leaderboard
 
-[Leaderboard.jsx](src/components/game/ui/Leaderboard.jsx) renders rankings and loading/error states. [leaderboardApi.js](src/services/leaderboardApi.js) now requests the shared API instead of browser-local storage. [server/leaderboard.js](server/leaderboard.js) validates submissions, while [server/mongodb.js](server/mongodb.js) reuses a database connection and creates the ranking index on first use.
+[Leaderboard.jsx](src/components/game/ui/Leaderboard.jsx) renders rankings and loading/error states. [leaderboardApi.js](src/services/leaderboardApi.js) handles shared API requests and request timeouts. [server/leaderboard.js](server/leaderboard.js) validates submissions, while [server/mongodb.js](server/mongodb.js) reuses a database connection and creates the ranking index on first use.
 
 | Endpoint | Behavior |
 | --- | --- |
@@ -166,24 +172,37 @@ npm run preview
 
 ```text
 Glitch-Void-Zero/
-├── api/leaderboard.js          # Vercel leaderboard function
+├── api/leaderboard.js          # Vercel function entry point
 ├── server/
-│   ├── leaderboard.js          # API validation and ranking queries
-│   ├── mongodb.js              # Database connection and index
-│   └── leaderboard.test.js     # API tests
-├── docs/screenshots/           # README captures from the live app
-├── public/
-│   └── models/                # Spaceship GLB asset
+│   ├── leaderboard.js         # Validation and ranking queries
+│   ├── mongodb.js             # Database connection and index
+│   └── leaderboard.test.js    # API tests
+├── docs/screenshots/          # Current app screenshots
+├── public/models/             # Third-party spaceship GLB
 ├── src/
-│   ├── App.jsx                # Canvas, lighting, world, and UI composition
+│   ├── App.jsx                # Canvas, world, lighting, and UI
 │   ├── main.jsx               # React entry point
-│   ├── index.css              # Game UI and responsive styling
+│   ├── index.css              # HUD, menus, and responsive styles
+│   ├── hooks/                 # Zustand store, keyboard, touch detection
+│   ├── state/                 # Mutable game, touch, and glitch state
+│   ├── services/              # Leaderboard API client
 │   └── components/
-│       ├── game/              # Entities, physics, state, HUD, and input
-│       └── glitch/            # Terrain, shaders, starfield, and effects
+│       ├── game/
+│       │   ├── GameScene.jsx  # Physics and entity composition
+│       │   ├── FlightRig.jsx  # Camera and flight motion
+│       │   ├── EnemySpawner.jsx
+│       │   ├── entities/      # Ship, enemies, projectiles, pickups, explosions
+│       │   ├── controls/      # Joystick and fire button
+│       │   └── ui/            # Menus, leaderboard, HUD, and reticle
+│       ├── glitch/
+│       │   ├── GlitchTerrain.jsx
+│       │   ├── NeonStarfield.jsx
+│       │   ├── GlitchEffects.jsx
+│       │   └── shaders/       # Terrain and starfield vertex/fragment GLSL
+│       └── ui/                # Shared loading overlay
 ├── index.html
 ├── package.json
-└── vite.config.js
+└── vite.config.js             # React and local leaderboard middleware
 ```
 
 ## Third-Party Assets
